@@ -1,0 +1,7 @@
+{
+    "default_v117_config": {
+        "url": "http://roku.static.nowtv.com/prod/app/1.17/config.json",
+        "body": "{\"forceUpdate\": false,\"maintenance\": false,\"heartbeat\": 30,\"tracking\": \"bskybrokuQA\",\"autoShutDownInterval\": 14400000,\"autoShutDownTimeOutSeconds\": 60,\"sportPassCost\" : \"9.99\",\"convivaEnabledState\": true,\"convivaUseTestKey\": false,\"passRenewalPriceEnts\": \"4.99\"}",
+        "headers": []
+    }
+}
