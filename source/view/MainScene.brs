@@ -6,9 +6,9 @@ function MainScene (properties = {} as Object) as Object
         TOSTRING: "<MainScene>"
         msgBus: MessageBus()
         matrixXY: invalid
-        aNumber: invalid
+        number2: invalid
 
-        ' Store all the positions available for each reactangle (taken from background image)
+        ' Store all the positions available for each reactangle (calculated from background image)
         createMatrixXY: function() as Void
             dim matrixXY[4, 4]
             ' first row
@@ -27,10 +27,10 @@ function MainScene (properties = {} as Object) as Object
             matrixXY[2,2] = {X: 661, Y: 405}
             matrixXY[2,3] = {X: 770, Y: 405}
             ' fourth row
-            matrixXY[3,0] = {X: 443, Y: 515}
-            matrixXY[3,1] = {X: 552, Y: 515}
-            matrixXY[3,2] = {X: 661, Y: 515}
-            matrixXY[3,3] = {X: 770, Y: 515}
+            matrixXY[3,0] = {X: 443, Y: 514}
+            matrixXY[3,1] = {X: 552, Y: 514}
+            matrixXY[3,2] = {X: 661, Y: 514}
+            matrixXY[3,3] = {X: 770, Y: 514}
 
             m.matrixXY = matrixXY
         end function
@@ -60,17 +60,29 @@ function MainScene (properties = {} as Object) as Object
                 }
             }
 
-            ' put a rectanlge in each position on the image-matrix
-            aNumber = Button({style: number2_Style})
-            aNumber.setText("2")
-            aNumber.setXY(m.matrixXY[0,0].X, m.matrixXY[0,0].Y)
-            ' position in matrixXY
-            aNumber.i = 0
-            aNumber.j = 0
-            aNumber.setActive()
-            m.addChild(aNumber)
-            m.aNumber = aNumber
+            number2 = Number({
+                parentContainer: m
+                x: m.matrixXY[0,0].X
+                y: m.matrixXY[0,0].Y
+                initProperties: {
+                    value: "2"
+                    i: 0
+                    j: 0
+                }
+            })
+            m.number2 = number2
 
+            
+            number4 = Number({
+                parentContainer: m
+                x: m.matrixXY[0,1].X
+                y: m.matrixXY[0,1].Y
+                initProperties: {
+                    value: "4"
+                    i: 0
+                    j: 1
+                }
+            })
         end function
 
         onImageLoadedHandler: function(eventObj as Object) as Void
@@ -89,31 +101,31 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onRightPressed: function() as Void
-            aNumber =m.aNumber
+            number2 =m.number2
             matrixXY = m.matrixXY
 
-            if (aNumber.i < 3)
-                if (aNumber.j < 3)
-                    aNumber.j = aNumber.j + 1
+            if (number2.i < 3)
+                if (number2.j < 3)
+                    number2.j = number2.j + 1
                 else
-                    aNumber.j = 0
-                    aNumber.i = aNumber.i + 1
+                    number2.j = 0
+                    number2.i = number2.i + 1
                 end if
             else
-                if (aNumber.j < 3)
-                    aNumber.j = aNumber.j + 1
+                if (number2.j < 3)
+                    number2.j = number2.j + 1
                 end if
             end if
             
-            i = aNumber.i
-            j = aNumber.j
-            TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
+            i = number2.i
+            j = number2.j
+            TweenManager().to(number2, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
 
-            m.aNumber = aNumber
+            m.number2 = number2
 
             ' for i=0 to 3
             '     for j=0 to 3
-            '         TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
+            '         TweenManager().to(number2, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
             '     end for
             ' end for
         end function
