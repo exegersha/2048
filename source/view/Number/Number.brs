@@ -5,50 +5,82 @@ function Number (properties = {} as Object) as Object
 
         TOSTRING: "<Number>"
         msgBus: MessageBus()
-        ' aNumber: invalid
         value: invalid
         i: invalid
         j: invalid
 
-        createUI: function () as Void
-            ' STYLES TAKEN FROM : http://gamesdreams.com/showthread.php?297469-Play-2048-Game-Online
-            ' aaTextColour = {}
-            aaTextColour = {
-                number2: &h776e65FF
-                number4: &h776e65FF
-            }
-            ' aaBgColour = {}
-            aaBgColour = {
-                number2: &heee4daFF
-                number4: &hede0c8FF
-            }
 
-            ' Move the style definitions for each number to style utils
+        aaTextColour: {
+            number2:    &h776e65FF
+            number4:    &h776e65FF
+            number8:    &hf7f5f2FF
+            number16:   &hf7f5f2FF
+            number32:   &hf7f5f2FF
+            number64:   &hf7f5f2FF
+            number128:  &hf7f5f2FF
+            number256:  &hf7f5f2FF
+            number512:  &hf7f5f2FF
+            number1024: &hf7f5f2FF
+            number2048: &hf7f5f2FF
+        }
+        aaBgColour: {
+            number2:    &heee4daFF
+            number4:    &hede0c8FF
+            number8:    &hf2b179FF
+            number16:   &hf59563FF
+            number32:   &hf67c5fFF
+            number64:   &hf65e3bFF
+            number128:  &hedcf72FF
+            number256:  &hf0cf4dFF
+            number512:  &hebc450FF
+            number1024: &he0b814FF
+            number2048: &hebc400FF
+        }
+        aaFont: {
+            number2:    StyleUtils().fonts.BROWN_PRO_48_BOLD
+            number4:    StyleUtils().fonts.BROWN_PRO_48_BOLD
+            number8:    StyleUtils().fonts.BROWN_PRO_48_BOLD
+            number16:   StyleUtils().fonts.BROWN_PRO_38_BOLD
+            number32:   StyleUtils().fonts.BROWN_PRO_38_BOLD
+            number64:   StyleUtils().fonts.BROWN_PRO_38_BOLD
+            number128:  StyleUtils().fonts.BROWN_PRO_32_BOLD
+            number256:  StyleUtils().fonts.BROWN_PRO_32_BOLD
+            number512:  StyleUtils().fonts.BROWN_PRO_32_BOLD
+            number1024: StyleUtils().fonts.BROWN_PRO_28_BOLD
+            number2048: StyleUtils().fonts.BROWN_PRO_28_BOLD
+        }
+        aaPadding: {
+            number2: {top: 20, left: 33}
+            number4: {top: 20, left: 33}
+            number8: {top: 20, left: 33}
+            number16: {top: 25, left: 25}
+            number32: {top: 25, left: 25}
+            number64: {top: 25, left: 25, right: 0, bottom: 0}
+            number128: {top: 28, left: 20, right: 0, bottom: 0}
+            number256: {top: 28, left: 20, right: 0, bottom: 0}
+            number512: {top: 28, left: 20, right: 0, bottom: 0}
+            number1024: {top: 30, left: 15, right: 0, bottom: 0}
+            number2048: {top: 30, left: 15, right: 0, bottom: 0}
+        }
+
+
+        createUI: function () as Void
             numberStyle = {
                 minWidth: 96
                 minHeight: 96
-                font: StyleUtils().fonts.BROWN_PRO_48_BOLD
+                font: m.aaFont["number" + m.value]
                 active: {
-                    textColour: aaTextColour["number" + m.value]
-                    backgroundColour: aaBgColour["number" + m.value]
+                    textColour: m.aaTextColour["number" + m.value]
+                    backgroundColour: m.aaBgColour["number" + m.value]
                 }
-                padding: {
-                    top: 20
-                    left: 30
-                }
+                padding: m.aaPadding["number" + m.value]
             }
 
-            ' put a rectanlge in each position on the image-matrix
+            ' put a rectanlge in each position of the background image-matrix
             aNumber = Button({style: numberStyle})
             aNumber.setText(m.value)
-            ' aNumber.setXY(m.matrixXY[0,0].X, m.matrixXY[0,0].Y)
-
-            ' position in matrixXY
-            ' aNumber.i = 0
-            ' aNumber.j = 0
             aNumber.setActive()
             m.addChild(aNumber)
-            ' m.aNumber = aNumber
         end function
 
         init: function (properties = {} as Object) as Void

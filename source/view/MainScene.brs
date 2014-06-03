@@ -5,35 +5,10 @@ function MainScene (properties = {} as Object) as Object
 
         TOSTRING: "<MainScene>"
         msgBus: MessageBus()
-        matrixXY: invalid
-        number2: invalid
-
-        ' Store all the positions available for each reactangle (calculated from background image)
-        createMatrixXY: function() as Void
-            dim matrixXY[4, 4]
-            ' first row
-            matrixXY[0,0] = {X: 443, Y: 185}
-            matrixXY[0,1] = {X: 552, Y: 185}
-            matrixXY[0,2] = {X: 661, Y: 185}
-            matrixXY[0,3] = {X: 770, Y: 185}
-            ' second row
-            matrixXY[1,0] = {X: 443, Y: 295}
-            matrixXY[1,1] = {X: 552, Y: 295}
-            matrixXY[1,2] = {X: 661, Y: 295}
-            matrixXY[1,3] = {X: 770, Y: 295}
-            ' third row
-            matrixXY[2,0] = {X: 443, Y: 405}
-            matrixXY[2,1] = {X: 552, Y: 405}
-            matrixXY[2,2] = {X: 661, Y: 405}
-            matrixXY[2,3] = {X: 770, Y: 405}
-            ' fourth row
-            matrixXY[3,0] = {X: 443, Y: 514}
-            matrixXY[3,1] = {X: 552, Y: 514}
-            matrixXY[3,2] = {X: 661, Y: 514}
-            matrixXY[3,3] = {X: 770, Y: 514}
-
-            m.matrixXY = matrixXY
-        end function
+        gameMgr: GameManager({
+                parentContainer: properties.parentContainer
+                })
+        number2: invalid        
 
         createUI: function () as Void
             ' Load background image
@@ -45,44 +20,22 @@ function MainScene (properties = {} as Object) as Object
             m.bgImage.load("pkg://images/background.png")
 
             
-            ' Move the style definitions for each number to style utils
-            number2_Style = {
-                minWidth: 96
-                minHeight: 96
-                font: StyleUtils().fonts.BROWN_PRO_48_BOLD
-                active: {
-                    textColour: &h776e65FF
-                    backgroundColour: &heee4daFF
-                }
-                padding: {
-                    top: 20
-                    left: 30
-                }
-            }
+            gameMgr = m.gameMgr
+            m.number2 = gameMgr.createNumber("2", 0, 0)
+            gameMgr.createNumber("4", 0, 1)
+            gameMgr.createNumber("8", 0, 2)
+            gameMgr.createNumber("16", 0, 3)
+            gameMgr.createNumber("32", 1, 0)
+            gameMgr.createNumber("64", 1, 1)
+            gameMgr.createNumber("128", 1, 2)
+            gameMgr.createNumber("256", 1, 3)
+            gameMgr.createNumber("512", 2, 0)
+            gameMgr.createNumber("1024", 3, 1)
+            gameMgr.createNumber("2048", 2, 2)
 
-            number2 = Number({
-                parentContainer: m
-                x: m.matrixXY[0,0].X
-                y: m.matrixXY[0,0].Y
-                initProperties: {
-                    value: "2"
-                    i: 0
-                    j: 0
-                }
-            })
-            m.number2 = number2
-
-            
-            number4 = Number({
-                parentContainer: m
-                x: m.matrixXY[0,1].X
-                y: m.matrixXY[0,1].Y
-                initProperties: {
-                    value: "4"
-                    i: 0
-                    j: 1
-                }
-            })
+            gameMgr.createNumber("16", 3, 0)
+            gameMgr.createNumber("32", 3, 2)
+            gameMgr.createNumber("64", 2, 1)
         end function
 
         onImageLoadedHandler: function(eventObj as Object) as Void
@@ -93,41 +46,12 @@ function MainScene (properties = {} as Object) as Object
             m.onBackPressed()
         end function
 
-        tweeningDone: function() as Void
-            print m.TOSTRING; " movement done!"
-        end function
 
         onLeftPressed: function() as Void
         end function
 
         onRightPressed: function() as Void
-            number2 =m.number2
-            matrixXY = m.matrixXY
-
-            if (number2.i < 3)
-                if (number2.j < 3)
-                    number2.j = number2.j + 1
-                else
-                    number2.j = 0
-                    number2.i = number2.i + 1
-                end if
-            else
-                if (number2.j < 3)
-                    number2.j = number2.j + 1
-                end if
-            end if
-            
-            i = number2.i
-            j = number2.j
-            TweenManager().to(number2, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
-
-            m.number2 = number2
-
-            ' for i=0 to 3
-            '     for j=0 to 3
-            '         TweenManager().to(number2, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
-            '     end for
-            ' end for
+           m.gameMgr.moveRight(m.number2)
         end function
 
         onUpPressed: function() as Void
@@ -150,7 +74,6 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         init: function (properties = {} as Object) as Void
-            m.createMatrixXY()
             m.createUI()
         end function
     }

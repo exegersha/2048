@@ -24,19 +24,26 @@ function AppFonts()
         BROWN_PRO_25_REG:       FontManager().getFont("BrownPro", 25)
         BROWN_PRO_25_BOLD:      FontManager().getFont("BrownPro", 25, true)
         BROWN_PRO_28_LIGHT:     FontManager().getFont("BrownPro Light", 28)
+        BROWN_PRO_28_BOLD:     FontManager().getFont("BrownPro Light", 28, true)
         BROWN_PRO_30_LIGHT:     FontManager().getFont("BrownPro Light", 30)
         BROWN_PRO_30_REG:       FontManager().getFont("BrownPro", 30)
         BROWN_PRO_30_BOLD:      FontManager().getFont("BrownPro", 30, true)
         BROWN_PRO_32_REG:       FontManager().getFont("BrownPro", 32)
+        BROWN_PRO_32_BOLD:       FontManager().getFont("BrownPro", 32, true)
+
         BROWN_PRO_34_LIGHT:     FontManager().getFont("BrownPro Light", 34)
         BROWN_PRO_34_REG:       FontManager().getFont("BrownPro", 34)
+        BROWN_PRO_34_BOLD:       FontManager().getFont("BrownPro", 34, true)
+
         BROWN_PRO_35_LIGHT:     FontManager().getFont("BrownPro Light", 35)
         BROWN_PRO_35_REG:       FontManager().getFont("BrownPro", 35)
         BROWN_PRO_36_LIGHT:     FontManager().getFont("BrownPro Light", 36)
         BROWN_PRO_36_REG:       FontManager().getFont("BrownPro", 36)
         BROWN_PRO_37_REG:       FontManager().getFont("BrownPro", 37)
         BROWN_PRO_37_BOLD:      FontManager().getFont("BrownPro", 37, true)
-
+        
+        BROWN_PRO_38_BOLD:      FontManager().getFont("BrownPro", 38, true)
+        BROWN_PRO_42_BOLD:      FontManager().getFont("BrownPro", 42, true)
         BROWN_PRO_48_BOLD:      FontManager().getFont("BrownPro", 48, true)
     }
 end function
