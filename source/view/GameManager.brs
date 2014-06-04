@@ -4,6 +4,7 @@ function GameManager (properties = {} as Object) as Object
     classDefinition = {
 
         TOSTRING: "<GameManager>"
+        ' These two constants define the game matrix size for all the game (every other object should refer to these constants)
         MATRIX_ROWS: 3
         MATRIX_COLS: 3
 
@@ -16,7 +17,7 @@ function GameManager (properties = {} as Object) as Object
 
         ' Store all the positions available for each reactangle (calculated from background image)
         createMatrixXY: function() as Void
-            dim matrixXY[4, 4]
+            dim matrixXY[m.MATRIX_ROWS, m.MATRIX_COLS]
             ' first row
             matrixXY[0,0] = {X: 442, Y: 185}
             matrixXY[0,1] = {X: 551, Y: 185}
@@ -43,9 +44,11 @@ function GameManager (properties = {} as Object) as Object
 
         ' Initialize the matrix that stores the Number objects present in each position of the game matrix
         createGameMatrix: function() as Void
-            dim gameMatrix[4, 4]
-            for i=0 to m.MATRIX_ROWS
-                for j=0 to m.MATRIX_COLS
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            dim gameMatrix[matrix_rows, matrix_cols]
+            for i=0 to matrix_rows
+                for j=0 to matrix_cols
                     gameMatrix[i,j] = invalid
                 end for
             end for
@@ -55,9 +58,11 @@ function GameManager (properties = {} as Object) as Object
         ' print out the gameMatrix content showing the numbers in each position - Helper for dev/debug
         dumpGameMatrix: function() as Void
             gameMatrix = m.gameMatrix
-            for i=0 to m.MATRIX_ROWS
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            for i=0 to matrix_rows
                 print "Row "; i
-                for j=0 to m.MATRIX_COLS
+                for j=0 to matrix_cols
                     value = gameMatrix[i,j]
                     ' Extract only value from Number object to print-out
                     if (value <> invalid)
@@ -86,6 +91,22 @@ function GameManager (properties = {} as Object) as Object
             ' Add the number object to the gameMatrix for later reference
             m.gameMatrix[rowPosition, columnPosition] = aNumber
             return aNumber
+        end function
+
+        ' looks for a free cell in the gameMatrix randomly and returns the [row, col] position
+        getRandomFreeCell: function() as Object
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            i = RND(matrix_rows) - 1
+            j = RND(matrix_cols) - 1
+            gameMatrix = m.gameMatrix
+            while (gameMatrix[i,j] <> invalid)
+                i = RND(matrix_rows) - 1
+                j = RND(matrix_cols) - 1
+            end while
+
+            freeCell = {row: i, col: j}
+            return freeCell
         end function
 
         tweeningDone: function() as Void

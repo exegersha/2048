@@ -8,7 +8,7 @@ function MainScene (properties = {} as Object) as Object
         gameMgr: GameManager({
                 parentContainer: properties.parentContainer
                 })
-        number2: invalid
+        ' number2: invalid
 
         createUI: function () as Void
             ' Load background image
@@ -20,27 +20,36 @@ function MainScene (properties = {} as Object) as Object
             m.bgImage.load("pkg://images/background.png")
 
 
-            ' initialize game to analize UI/Style
             gameMgr = m.gameMgr
-            m.number2 = gameMgr.createNumber("2", 0, 0)
-            gameMgr.createNumber("4", 0, 1)
-            gameMgr.createNumber("8", 0, 2)
-            gameMgr.createNumber("16", 0, 3)
 
-            gameMgr.createNumber("32", 1, 0)
-            gameMgr.createNumber("64", 1, 1)
-            gameMgr.createNumber("128", 1, 2)
-            gameMgr.createNumber("256", 1, 3)
+            ' create 1st Number 2 in random position
+            freeCell = gameMgr.getRandomFreeCell()
+            gameMgr.createNumber("2", freeCell.row, freeCell.col)
 
-            gameMgr.createNumber("512", 2, 0)
-            gameMgr.createNumber("64", 2, 1)
-            gameMgr.createNumber("2048", 2, 2)
+            ' create 2nd Number 2 in random position
+            freeCell = gameMgr.getRandomFreeCell()
+            gameMgr.createNumber("2", freeCell.row, freeCell.col)
 
-            gameMgr.createNumber("16", 3, 0)
-            gameMgr.createNumber("1024", 3, 1)
-            gameMgr.createNumber("32", 3, 2)
+            ' initialize game to analize UI/Style
+            ' m.number2 = gameMgr.createNumber("2", 0, 0)
+            ' gameMgr.createNumber("4", 0, 1)
+            ' gameMgr.createNumber("8", 0, 2)
+            ' gameMgr.createNumber("16", 0, 3)
 
-            gameMgr.dumpGameMatrix()
+            ' gameMgr.createNumber("32", 1, 0)
+            ' gameMgr.createNumber("64", 1, 1)
+            ' gameMgr.createNumber("128", 1, 2)
+            ' gameMgr.createNumber("256", 1, 3)
+
+            ' gameMgr.createNumber("512", 2, 0)
+            ' gameMgr.createNumber("64", 2, 1)
+            ' gameMgr.createNumber("2048", 2, 2)
+
+            ' gameMgr.createNumber("16", 3, 0)
+            ' gameMgr.createNumber("1024", 3, 1)
+            ' gameMgr.createNumber("32", 3, 2)
+
+            ' gameMgr.dumpGameMatrix()
         end function
 
         onImageLoadedHandler: function(eventObj as Object) as Void
@@ -56,7 +65,7 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onRightPressed: function() as Void
-           m.gameMgr.moveRight(m.number2)
+           ' m.gameMgr.moveRight(m.number2)
         end function
 
         onUpPressed: function() as Void
