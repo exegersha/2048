@@ -7,9 +7,11 @@ function GameManager (properties = {} as Object) as Object
         ' These two constants define the game matrix size for all the game (every other object should refer to these constants)
         MATRIX_ROWS: 3
         MATRIX_COLS: 3
+        ANIMATION_FRAMES: 6
 
         msgBus: MessageBus()
         matrixXY: invalid
+        ' Stores the Number objects present in each position of the game matrix
         gameMatrix: invalid
         'This is replaces at the bottom of this class from param properties
         parentContainer: invalid
@@ -122,7 +124,67 @@ function GameManager (properties = {} as Object) as Object
         onUpPressed: function() as Void
         end function
 
-        moveRight: function(aNumber as Object) as Void
+        ' sweep in this order, 3 times to complete the full barrier movement:
+        ' -> 3rd column top-down (i.e. [0,2] [1,2] [2,2] [3,2])
+        ' -> 2nd column top-down (i.e. [0,1] [1,1] [2,1] [3,1])
+        ' -> 1st column top-down (i.e. [0,0] [1,0] [2,0] [3,0])
+        moveRight: function() as Void
+            gameMatrix = m.gameMatrix
+            cols = m.MATRIX_COLS - 1
+            rows = m.MATRIX_ROWS
+            for k=0 to cols ' repeat the sweep 3 times
+                for j=cols to 0 step -1
+                    for i=0 to rows
+                        if (gameMatrix[i,j] <> invalid)
+                            if (gameMatrix[i,j + 1] = invalid)
+                                ' if cell on the right is empty move Number
+                                m.moveNumber(gameMatrix[i,j], i, j+1)
+                            else if (gameMatrix[i,j + 1].value = gameMatrix[i,j].value)
+                                ' if cell on the right has same Number do a JOIN
+                                m.joinNumber(gameMatrix[i,j], i, j+1)
+                            end if
+                        end if
+                    end for
+                end for
+            end for
+        end function
+
+        ' move aNumber to the target row,col in the gameMatrix
+        moveNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
+            matrixXY = m.matrixXY
+            TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y, onComplete: {destination:m, callback:"tweeningDone"}})
+
+            ' Update gameMatrix and Number object:
+            gameMatrix = m.gameMatrix
+            ' make origin position available again
+            gameMatrix[aNumber.i, aNumber.j] = invalid
+            ' update Number position and matrixGame[targetRow, targetCol]
+            aNumber.i = targetRow
+            aNumber.j = targetCol
+            gameMatrix[targetRow, targetCol] = aNumber
+            m.gameMatrix = gameMatrix
+        end function
+
+        ' move aNumber to the target row,col in the gameMatrix and joins it with the current number in the target position
+        joinNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
+            oldTargetNumber = m.gameMatrix[targetRow, targetCol]
+            jointValue = StringFromInt((aNumber.value).toint() * 2)
+            print "*** jointValue="; jointValue
+
+            m.moveNumber(aNumber, targetRow, targetCol)
+
+            print "*** after animation"
+
+            oldTargetNumber.dispose()
+            oldTargetNumber = invalid
+            aNumber.dispose()
+            aNumber = invalid
+
+            print "*** after dispose"
+            aNumber = m.createNumber(jointValue, targetRow, targetCol)
+        end function
+
+        moveNumberRightOneCell: function(aNumber as Object) as Void
             matrixXY = m.matrixXY
 
             if (aNumber.i < 3)

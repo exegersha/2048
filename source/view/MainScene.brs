@@ -24,11 +24,14 @@ function MainScene (properties = {} as Object) as Object
 
             ' create 1st Number 2 in random position
             freeCell = gameMgr.getRandomFreeCell()
-            gameMgr.createNumber("2", freeCell.row, freeCell.col)
+            ' gameMgr.createNumber("2", freeCell.row, freeCell.col)
+            gameMgr.createNumber("2", 0, 2)
+            gameMgr.createNumber("2", 0, 3)
 
             ' create 2nd Number 2 in random position
             freeCell = gameMgr.getRandomFreeCell()
-            gameMgr.createNumber("2", freeCell.row, freeCell.col)
+            ' gameMgr.createNumber("2", freeCell.row, freeCell.col)
+
 
             ' initialize game to analize UI/Style
             ' m.number2 = gameMgr.createNumber("2", 0, 0)
@@ -65,7 +68,8 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onRightPressed: function() as Void
-           ' m.gameMgr.moveRight(m.number2)
+           ' m.gameMgr.moveNumberRightOneCell(m.number2)
+           m.gameMgr.moveRight()
         end function
 
         onUpPressed: function() as Void

@@ -6,6 +6,7 @@ function Number (properties = {} as Object) as Object
         TOSTRING: "<Number>"
         msgBus: MessageBus()
         value: invalid
+        ' store position in matrixXY: i=row, j=column
         i: invalid
         j: invalid
 
