@@ -4,10 +4,15 @@ function GameManager (properties = {} as Object) as Object
     classDefinition = {
 
         TOSTRING: "<GameManager>"
+        MATRIX_ROWS: 3
+        MATRIX_COLS: 3
+
         msgBus: MessageBus()
         matrixXY: invalid
+        gameMatrix: invalid
         'This is replaces at the bottom of this class from param properties
         parentContainer: invalid
+
 
         ' Store all the positions available for each reactangle (calculated from background image)
         createMatrixXY: function() as Void
@@ -36,7 +41,36 @@ function GameManager (properties = {} as Object) as Object
             m.matrixXY = matrixXY
         end function
 
-        ' cCeates the number <valueStr> in the [rowPosition, columnPsotion] of the matrix
+        ' Initialize the matrix that stores the Number objects present in each position of the game matrix
+        createGameMatrix: function() as Void
+            dim gameMatrix[4, 4]
+            for i=0 to m.MATRIX_ROWS
+                for j=0 to m.MATRIX_COLS
+                    gameMatrix[i,j] = invalid
+                end for
+            end for
+            m.gameMatrix = gameMatrix
+        end function
+
+        ' print out the gameMatrix content showing the numbers in each position - Helper for dev/debug
+        dumpGameMatrix: function() as Void
+            gameMatrix = m.gameMatrix
+            for i=0 to m.MATRIX_ROWS
+                print "Row "; i
+                for j=0 to m.MATRIX_COLS
+                    value = gameMatrix[i,j]
+                    ' Extract only value from Number object to print-out
+                    if (value <> invalid)
+                        value = gameMatrix[i,j].value
+                    end if
+
+                    print "[";i;",";j;"]="; value
+                end for
+                print Chr(10)
+            end for
+        end function
+
+        ' Ceates the number <valueStr> in the [rowPosition, columnPsotion] of the matrix AND save it in gameMatrix
         createNumber: function (valueStr as String, rowPosition as Integer, columnPosition as Integer) as Object
             aNumber = Number({
                 parentContainer: m.parentContainer
@@ -48,6 +82,9 @@ function GameManager (properties = {} as Object) as Object
                     j: columnPosition
                 }
             })
+
+            ' Add the number object to the gameMatrix for later reference
+            m.gameMatrix[rowPosition, columnPosition] = aNumber
             return aNumber
         end function
 
@@ -79,7 +116,7 @@ function GameManager (properties = {} as Object) as Object
                     aNumber.j = aNumber.j + 1
                 end if
             end if
-            
+
             i = aNumber.i
             j = aNumber.j
             TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
@@ -100,6 +137,7 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         init: function (properties = {} as Object) as Void
+            m.createGameMatrix()
             m.createMatrixXY()
         end function
     }
