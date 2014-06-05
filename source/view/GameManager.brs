@@ -147,6 +147,7 @@ function GameManager (properties = {} as Object) as Object
                     end for
                 end for
             end for
+            m.gameMatrix = gameMatrix
         end function
 
         ' move aNumber to the target row,col in the gameMatrix

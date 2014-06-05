@@ -9,6 +9,8 @@ function Number (properties = {} as Object) as Object
         ' store position in matrixXY: i=row, j=column
         i: invalid
         j: invalid
+        ' reference needed to disposeUI
+        aNumber: invalid
 
 
         aaTextColour: {
@@ -82,6 +84,7 @@ function Number (properties = {} as Object) as Object
             aNumber.setText(m.value)
             aNumber.setActive()
             m.addChild(aNumber)
+            m.aNumber = aNumber
         end function
 
         init: function (properties = {} as Object) as Void
@@ -91,6 +94,19 @@ function Number (properties = {} as Object) as Object
             m.i     = properties.i
             m.j     = properties.j
             m.createUI()
+        end function
+
+        dispose: function () as Void
+            print m.TOSTRING; " dispose m.aNumber="; m.aNumber
+            aNumber = m.aNumber
+            if (aNumber <> invalid)
+                m.removeChild(aNumber)
+                aNumber.dispose()
+                aNumber = invalid
+            end if
+            m.aNumber = aNumber
+            m = invalid
+            RunGarbageCollector()
         end function
     }
 
