@@ -2,15 +2,15 @@ function ConfigManager () as Object
     if (m.configManagerInstance = invalid)
 
         mgr = {
-            id: "configManagerInstance",
+            id: "configManagerInstance"
 
             ' dependencies
-            rgm: RegistryManager(),
-            defaultSettings: Defaults().SETTINGS,
+            rgm: RegistryManager()
+            defaultSettings: Defaults().SETTINGS
 
             ' properties
-            configRegistryKey: "",
-            config: {},
+            configRegistryKey: ""
+            config: {}
 
             init: function () as Void
                 m.configRegistryKey = m.defaultSettings.REGISTRY_SECTION
@@ -27,22 +27,22 @@ function ConfigManager () as Object
                 if (defaultConf <> invalid)
                     m.config = defaultConf
                 end if
-            end function,
+            end function
 
             loadDefaults: function () as Object
                 return m.defaultSettings
-            end function,
+            end function
 
             readConfig: function () as Object
                 return m.rgm.readAll(m.configRegistryKey)
-            end function,
+            end function
 
             writeConfig: function (newConfig = invalid as Dynamic) as Void
                 if (newConfig <> invalid)
                     m.rgm.writeAll(newConfig, m.configRegistryKey)
                     m.config = newConfig
                 end if
-            end function,
+            end function
 
             getConfig: function () as Object
                 return m.config

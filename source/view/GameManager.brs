@@ -9,7 +9,12 @@ function GameManager (properties = {} as Object) as Object
         MATRIX_COLS: 3
         ANIMATION_FRAMES: 6
 
+        _score: invalid       ' stores the score of the current game
+        _bestScore: invalid  ' init this value from the registry on Init()
+        configMngr: ConfigManager()
+
         msgBus: MessageBus()
+        
         matrixXY: invalid
         ' Stores the Number objects present in each position of the game matrix
         gameMatrix: invalid
@@ -44,8 +49,10 @@ function GameManager (properties = {} as Object) as Object
             m.matrixXY = matrixXY
         end function
 
-        ' Initialize the matrix that stores the Number objects present in each position of the game matrix
-        createGameMatrix: function() as Void
+        ' Initialize the matrix that stores with INVALID entries
+        ' It's used for e.g. for the game matrix that stores the Number objects present in each position of the game matrix
+        ' Also used to create temporal matrix to mark new JOIN numbers during a key-press move.
+        createEmptyMatrix: function() as Object
             matrix_rows = m.MATRIX_ROWS
             matrix_cols = m.MATRIX_COLS
             dim gameMatrix[matrix_rows, matrix_cols]
@@ -54,7 +61,7 @@ function GameManager (properties = {} as Object) as Object
                     gameMatrix[i,j] = invalid
                 end for
             end for
-            m.gameMatrix = gameMatrix
+            return gameMatrix
         end function
 
         ' print out the gameMatrix content showing the numbers in each position - Helper for dev/debug
@@ -111,17 +118,17 @@ function GameManager (properties = {} as Object) as Object
             return freeCell
         end function
 
-        tweeningDone: function() as Void
+        moveNumberDone: function() as Void
             print m.TOSTRING; " movement done!"
         end function
 
-        onLeftPressed: function() as Void
+        moveLeft: function() as Void
         end function
 
-        onRightPressed: function() as Void
+        moveDown: function() as Void
         end function
 
-        onUpPressed: function() as Void
+        moveUp: function() as Void
         end function
 
         ' sweep in this order, 3 times to complete the full barrier movement:
@@ -129,6 +136,9 @@ function GameManager (properties = {} as Object) as Object
         ' -> 2nd column top-down (i.e. [0,1] [1,1] [2,1] [3,1])
         ' -> 1st column top-down (i.e. [0,0] [1,0] [2,0] [3,0])
         moveRight: function() as Void
+            'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
+            newJoinNumber = m.createEmptyMatrix()
+
             gameMatrix = m.gameMatrix
             cols = m.MATRIX_COLS - 1
             rows = m.MATRIX_ROWS
@@ -139,21 +149,70 @@ function GameManager (properties = {} as Object) as Object
                             if (gameMatrix[i,j + 1] = invalid)
                                 ' if cell on the right is empty move Number
                                 m.moveNumber(gameMatrix[i,j], i, j+1)
-                            else if (gameMatrix[i,j + 1].value = gameMatrix[i,j].value)
+                            else if (gameMatrix[i, j+1].value = gameMatrix[i,j].value AND newJoinNumber[i, j+1]=invalid AND newJoinNumber[i,j]=invalid)
+                                m.updateScore((gameMatrix[i,j].value).toint() * 2)
+
                                 ' if cell on the right has same Number do a JOIN
                                 m.joinNumber(gameMatrix[i,j], i, j+1)
+                                ' mark target position as a new JOIN to avoid JOINING again during this move
+                                newJoinNumber[i, j+1] = true
+                                
                             end if
                         end if
                     end for
                 end for
             end for
             m.gameMatrix = gameMatrix
+
+            newJoinNumber = invalid
+
+            m.checkGameStatus()
         end function
+
+        ' check if GAME OVERs or WIN and updates _bestSscore in registry and UI accordingly
+        checkGameStatus: function() as Void
+            gameMatrix = m.gameMatrix
+        end function
+
+        ' updates _score & _bestScore variables and UI
+        updateScore: function(addToScore as Integer) as Void
+            _score = m._score
+            _bestScore = m._bestScore
+
+            _score = _score + addToScore
+            if (_bestScore < _score)
+                _bestScore = _score
+            end if
+
+            m._score = _score
+            m._bestScore = _bestScore
+            print m.TOSTRING; "initScore: m._score=";m._score; " m._bestScore=";m._bestScore
+        end function
+
+        ' initilize _scrore, retrieves _bestScore from registry & updates UI
+        initScore: function() as Void
+            currentConfig = m.configMngr.getConfig()
+            m._score = (currentConfig.SCORE).toint()
+            m._bestScore = (currentConfig.BEST_SCORE).toint()
+
+            print m.TOSTRING; "initScore: m._score=";m._score; " m._bestScore=";m._bestScore
+        end function
+
+        ' persist _scrore & _bestScore in registry
+        saveScore: function() as Void
+            newConfig = {} 'm.configMngr.getConfig()
+            newConfig.SCORE = StringFromNumber(m._score)
+            newConfig.BEST_SCORE = StringFromNumber(m._bestScore)
+            m.configMngr.writeConfig(newConfig)
+
+            print m.TOSTRING; "saveScore: m._score=";m._score; " m._bestScore=";m._bestScore
+        end function
+
 
         ' move aNumber to the target row,col in the gameMatrix
         moveNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
             matrixXY = m.matrixXY
-            TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y, onComplete: {destination:m, callback:"tweeningDone"}})
+            TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y, onComplete: {destination:m, callback:"moveNumberDone"}})
 
             ' Update gameMatrix and Number object:
             gameMatrix = m.gameMatrix
@@ -170,18 +229,18 @@ function GameManager (properties = {} as Object) as Object
         joinNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
             oldTargetNumber = m.gameMatrix[targetRow, targetCol]
             jointValue = StringFromInt((aNumber.value).toint() * 2)
-            print "*** jointValue="; jointValue
+            ' print "*** jointValue="; jointValue
 
             m.moveNumber(aNumber, targetRow, targetCol)
 
-            print "*** after animation"
+            ' print "*** after animation"
 
             oldTargetNumber.dispose()
             oldTargetNumber = invalid
             aNumber.dispose()
             aNumber = invalid
 
-            print "*** after dispose"
+            ' print "*** after dispose"
             aNumber = m.createNumber(jointValue, targetRow, targetCol)
         end function
 
@@ -203,13 +262,13 @@ function GameManager (properties = {} as Object) as Object
 
             i = aNumber.i
             j = aNumber.j
-            TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
+            TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"moveNumberDone"}})
 
             m.aNumber = aNumber
 
             ' for i=0 to 3
             '     for j=0 to 3
-            '         TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"tweeningDone"}})
+            '         TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"moveNumberDone"}})
             '     end for
             ' end for
         end function
@@ -221,8 +280,9 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         init: function (properties = {} as Object) as Void
-            m.createGameMatrix()
+            m.gameMatrix = m.createEmptyMatrix()
             m.createMatrixXY()
+            m.initScore()
         end function
     }
 

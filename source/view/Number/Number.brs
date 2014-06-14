@@ -97,7 +97,7 @@ function Number (properties = {} as Object) as Object
         end function
 
         dispose: function () as Void
-            print m.TOSTRING; " dispose m.aNumber="; m.aNumber
+            ' print m.TOSTRING; " dispose m.aNumber="; m.aNumber
             aNumber = m.aNumber
             if (aNumber <> invalid)
                 m.removeChild(aNumber)

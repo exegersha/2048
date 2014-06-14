@@ -27,9 +27,26 @@ function MainScene (properties = {} as Object) as Object
             ' gameMgr.createNumber("2", freeCell.row, freeCell.col)
             gameMgr.createNumber("2", 0, 2)
             gameMgr.createNumber("2", 0, 3)
+            gameMgr.createNumber("2", 0, 1)
+            gameMgr.createNumber("2", 0, 0)
+
+            gameMgr.createNumber("2", 1, 2)
+            gameMgr.createNumber("2", 1, 3)
+            gameMgr.createNumber("2", 1, 1)
+            gameMgr.createNumber("2", 1, 0)
+
+            gameMgr.createNumber("2", 2, 2)
+            gameMgr.createNumber("2", 2, 3)
+            gameMgr.createNumber("2", 2, 1)
+            gameMgr.createNumber("2", 2, 0)
+
+            gameMgr.createNumber("2", 3, 2)
+            gameMgr.createNumber("2", 3, 3)
+            gameMgr.createNumber("2", 3, 1)
+            gameMgr.createNumber("2", 3, 0)
 
             ' create 2nd Number 2 in random position
-            freeCell = gameMgr.getRandomFreeCell()
+            ' freeCell = gameMgr.getRandomFreeCell()
             ' gameMgr.createNumber("2", freeCell.row, freeCell.col)
 
 
@@ -65,6 +82,7 @@ function MainScene (properties = {} as Object) as Object
 
 
         onLeftPressed: function() as Void
+            m.gameMgr.moveLeft()
         end function
 
         onRightPressed: function() as Void
@@ -73,9 +91,16 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onUpPressed: function() as Void
+            m.gameMgr.moveUp()
+        end function
+
+        onDownPressed: function() as Void
+            m.gameMgr.moveDown()
         end function
 
         onBackPressed: function() as Void
+            m.gameMgr.saveScore()
+            
             ' Close the app!
             m.msgBus.dispatchEvent(Event({
                 eventType: "closeApp",
