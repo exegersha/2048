@@ -8,6 +8,7 @@ function GameManager (properties = {} as Object) as Object
         MATRIX_ROWS: 3
         MATRIX_COLS: 3
         ANIMATION_FRAMES: 6
+        WIN_NUMBER: "2048"
 
         _score: invalid       ' stores the score of the current game
         _bestScore: invalid  ' init this value from the registry on Init()
@@ -112,8 +113,10 @@ function GameManager (properties = {} as Object) as Object
             while (gameMatrix[i,j] <> invalid)
                 i = RND(matrix_rows) - 1
                 j = RND(matrix_cols) - 1
+                print m.TOSTRING; " generating random cell: i="; i; " j="; j
             end while
-
+            print m.TOSTRING; " random cell DONE!  i="; i; " j="; j
+            
             freeCell = {row: i, col: j}
             return freeCell
         end function
@@ -123,6 +126,42 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         moveLeft: function() as Void
+            print m.TOSTRING; " move left BEGIN"
+            'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
+            newJoinNumber = m.createEmptyMatrix()
+
+            gameMatrix = m.gameMatrix
+            cols = m.MATRIX_COLS
+            rows = m.MATRIX_ROWS
+            moveDone = false 'flag to indicate if there's at least 1 number changing position in this move
+            for k=1 to cols ' repeat the sweep 3 times
+                for j=1 to cols
+                    for i=0 to rows
+                        if (gameMatrix[i,j] <> invalid)
+                            if (gameMatrix[i, j-1] = invalid) ' if cell on the left is empty move Number
+                                m.moveNumber(gameMatrix[i,j], i, j-1)
+                                moveDone = true
+                            else if (gameMatrix[i, j-1].value = gameMatrix[i,j].value AND newJoinNumber[i, j-1]=invalid AND newJoinNumber[i,j]=invalid)
+                                'update score before disposing numbers
+                                m.updateScore((gameMatrix[i,j].value).toint() * 2)
+                                ' if cell on the right has same Number do a JOIN
+                                m.joinNumber(gameMatrix[i,j], i, j-1)
+                                ' mark target position as a new JOIN to avoid JOINING again during this move
+                                newJoinNumber[i, j-1] = true
+                                moveDone = true
+                            end if
+                        end if
+                    end for
+                end for
+            end for
+            m.gameMatrix = gameMatrix
+
+            newJoinNumber = invalid
+
+            m.updateGameStatus(moveDone)
+            m.dumpGameMatrix()
+
+            print m.TOSTRING; " move left END"
         end function
 
         moveDown: function() as Void
@@ -136,42 +175,108 @@ function GameManager (properties = {} as Object) as Object
         ' -> 2nd column top-down (i.e. [0,1] [1,1] [2,1] [3,1])
         ' -> 1st column top-down (i.e. [0,0] [1,0] [2,0] [3,0])
         moveRight: function() as Void
+            print m.TOSTRING; " move right BEGIN"
             'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
             newJoinNumber = m.createEmptyMatrix()
 
             gameMatrix = m.gameMatrix
-            cols = m.MATRIX_COLS - 1
+            cols = m.MATRIX_COLS
             rows = m.MATRIX_ROWS
-            for k=0 to cols ' repeat the sweep 3 times
-                for j=cols to 0 step -1
+            moveDone = false 'flag to indicate if there's at least 1 number changing position in this move
+            for k=1 to cols ' repeat the sweep 3 times
+                for j=cols - 1 to 0 step -1
                     for i=0 to rows
                         if (gameMatrix[i,j] <> invalid)
-                            if (gameMatrix[i,j + 1] = invalid)
-                                ' if cell on the right is empty move Number
+                            if (gameMatrix[i, j+1] = invalid) ' if cell on the right is empty move Number
                                 m.moveNumber(gameMatrix[i,j], i, j+1)
+                                moveDone = true
                             else if (gameMatrix[i, j+1].value = gameMatrix[i,j].value AND newJoinNumber[i, j+1]=invalid AND newJoinNumber[i,j]=invalid)
+                                'update score before disposing numbers
                                 m.updateScore((gameMatrix[i,j].value).toint() * 2)
-
                                 ' if cell on the right has same Number do a JOIN
                                 m.joinNumber(gameMatrix[i,j], i, j+1)
                                 ' mark target position as a new JOIN to avoid JOINING again during this move
                                 newJoinNumber[i, j+1] = true
-                                
+                                moveDone = true
                             end if
                         end if
                     end for
                 end for
             end for
             m.gameMatrix = gameMatrix
-
+            
             newJoinNumber = invalid
 
-            m.checkGameStatus()
+            m.updateGameStatus(moveDone)
+            m.dumpGameMatrix()
+
+            print m.TOSTRING; " move right END"
         end function
 
         ' check if GAME OVERs or WIN and updates _bestSscore in registry and UI accordingly
-        checkGameStatus: function() as Void
+        updateGameStatus: function(moveDoneBefore as Boolean) as Void
+            if (m.hasWinnerNumber())
+                ' show YOU WIN screen! (show "*" to start new game)
+                print m.TOSTRING; " YOU WIN !!!"
+            else if (m.isGameOver())
+                ' show GAME OVER screen (show "*" to start new game)
+                print m.TOSTRING; " GAME OVER :("
+            else if (moveDoneBefore)
+                ' Insert a new number in random position
+                freeCell = m.getRandomFreeCell()
+                m.createNumber("2", freeCell.row, freeCell.col)
+            end if
+        end function
+
+        hasWinnerNumber: function() as Boolean
             gameMatrix = m.gameMatrix
+            winNumber = m.WIN_NUMBER
+            rows = m.MATRIX_ROWS
+            cols = m.MATRIX_COLS
+            for i=0 to rows
+                for j=0 to cols
+                    if (gameMatrix[i,j] <> invalid AND gameMatrix[i,j].value = winNumber)
+                        return true
+                    end if
+                end for
+            end for
+            return false
+        end function
+
+        isGameOver: function() as Boolean
+            gameMatrix = m.gameMatrix
+            rows = m.MATRIX_ROWS
+            cols = m.MATRIX_COLS
+            for i=0 to rows
+                for j=0 to cols
+                    if (gameMatrix[i,j] = invalid)
+                        'there is a free cell so it's possible to make a move
+                        return false
+                    else
+                        ' Check if current number can join current one its 4 neighbors
+                        current = gameMatrix[i,j].value
+
+                        ' Upper neighbor
+                        if (i > 0 AND gameMatrix[i-1,j] <> invalid AND gameMatrix[i-1,j].value = current)
+                            return false
+                        end if
+                        ' Left neighbor
+                        if (j > 0 AND gameMatrix[i,j-1] <> invalid AND gameMatrix[i,j-1].value = current)
+                            return false
+                        end if
+                        ' Right neighbor
+                        if (j < cols AND gameMatrix[i,j+1] <> invalid AND gameMatrix[i,j+1].value = current)
+                            return false
+                        end if
+                        ' Bottom neighbor
+                        if (i < rows AND gameMatrix[i+1,j] <> invalid AND gameMatrix[i+1,j].value = current)
+                            return false
+                        end if
+
+                    end if
+                end for
+            end for
+            return true
         end function
 
         ' updates _score & _bestScore variables and UI
@@ -186,7 +291,7 @@ function GameManager (properties = {} as Object) as Object
 
             m._score = _score
             m._bestScore = _bestScore
-            print m.TOSTRING; "initScore: m._score=";m._score; " m._bestScore=";m._bestScore
+            ' print m.TOSTRING; "initScore: m._score=";m._score; " m._bestScore=";m._bestScore
         end function
 
         ' initilize _scrore, retrieves _bestScore from registry & updates UI
@@ -212,7 +317,7 @@ function GameManager (properties = {} as Object) as Object
         ' move aNumber to the target row,col in the gameMatrix
         moveNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
             matrixXY = m.matrixXY
-            TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y, onComplete: {destination:m, callback:"moveNumberDone"}})
+            TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y }) ', onComplete: {destination:m, callback:"moveNumberDone"}})
 
             ' Update gameMatrix and Number object:
             gameMatrix = m.gameMatrix
@@ -239,6 +344,7 @@ function GameManager (properties = {} as Object) as Object
             oldTargetNumber = invalid
             aNumber.dispose()
             aNumber = invalid
+            RunGarbageCollector()
 
             ' print "*** after dispose"
             aNumber = m.createNumber(jointValue, targetRow, targetCol)
