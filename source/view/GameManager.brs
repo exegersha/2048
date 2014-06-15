@@ -105,8 +105,9 @@ function GameManager (properties = {} as Object) as Object
 
         ' looks for a free cell in the gameMatrix randomly and returns the [row, col] position
         getRandomFreeCell: function() as Object
-            matrix_rows = m.MATRIX_ROWS
-            matrix_cols = m.MATRIX_COLS
+            matrix_rows = m.MATRIX_ROWS + 1
+            matrix_cols = m.MATRIX_COLS + 1
+            ' RND(<integer>) returns a number betwee 1 and <integer> inclusive (this case is RND(4)={1..4})
             i = RND(matrix_rows) - 1
             j = RND(matrix_cols) - 1
             gameMatrix = m.gameMatrix
@@ -217,10 +218,10 @@ function GameManager (properties = {} as Object) as Object
         updateGameStatus: function(moveDoneBefore as Boolean) as Void
             if (m.hasWinnerNumber())
                 ' show YOU WIN screen! (show "*" to start new game)
-                print m.TOSTRING; " YOU WIN !!!"
+                print m.TOSTRING; " YOU WIN !!! ***************************"
             else if (m.isGameOver())
                 ' show GAME OVER screen (show "*" to start new game)
-                print m.TOSTRING; " GAME OVER :("
+                print m.TOSTRING; " GAME OVER :( **************************"
             else if (moveDoneBefore)
                 ' Insert a new number in random position
                 freeCell = m.getRandomFreeCell()
