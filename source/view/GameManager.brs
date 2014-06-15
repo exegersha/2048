@@ -89,6 +89,44 @@ function GameManager (properties = {} as Object) as Object
             end for
         end function
 
+        ' Returns a string representig gameMaxtrix rows from left-to-right and top-down
+        gameMatrixToString: function() as String
+            gameMatrix = m.gameMatrix
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            str = ""
+            for i=0 to matrix_rows
+                for j=0 to matrix_cols
+                    value = gameMatrix[i,j]
+                    ' Extract only value from Number object to print-out
+                    if (gameMatrix[i,j] <> invalid)
+                        str = str + gameMatrix[i,j].value + ","
+                    else
+                        str = str + "null" + ","
+                    end if
+                end for
+            end for
+            print m.TOSTRING; " gameMatrixToString="; str
+            return str
+        end function
+
+        ' Restore gameMaxtrix from string parameter, builds the matrix rows from left-to-right and top-down and updates the UI
+        updateGameMatrixFromString: function (strGameMatrix as String) as Void
+            listGameMatrix = strGameMatrix.Tokenize(",")
+            listGameMatrix.resetIndex()
+
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            for i=0 to matrix_rows
+                for j=0 to matrix_cols
+                    listEntry = listGameMatrix.getIndex()
+                    if (listEntry <> "null")
+                        m.createNumber(listEntry, i, j)
+                    end if
+                end for
+            end for
+        end function
+
         ' Ceates the number <valueStr> in the [rowPosition, columnPsotion] of the matrix AND save it in gameMatrix
         createNumber: function (valueStr as String, rowPosition as Integer, columnPosition as Integer) as Object
             aNumber = Number({
@@ -144,7 +182,7 @@ function GameManager (properties = {} as Object) as Object
 
         startNewGame: function() as Void
             m.delayedTimer.reset()
-            
+
             ' reset score
             m._score = 0
             ' persist _bestScore in case it was changed during this game
@@ -152,7 +190,10 @@ function GameManager (properties = {} as Object) as Object
 
             ' dispose any number in UI from previous game and reset the gameMatrix
             m.disposeCurrentGame()
-            m.dumpGameMatrix()
+            ' persist empty gameMatrix
+            m.saveGameMatrix()
+
+            ' m.dumpGameMatrix()
 
             ' create 1st Number 2 in random position
             freeCell = m.getRandomFreeCell()
@@ -408,26 +449,43 @@ function GameManager (properties = {} as Object) as Object
 
             m._score = _score
             m._bestScore = _bestScore
-            ' print m.TOSTRING; "initScore: m._score=";m._score; " m._bestScore=";m._bestScore
+            ' print m.TOSTRING; "restoreScore: m._score=";m._score; " m._bestScore=";m._bestScore
         end function
 
-        ' initilize _scrore, retrieves _bestScore from registry & updates UI
-        initScore: function() as Void
+        ' retrieves _scrore & _bestScore from registry (TODO: & updates UI)
+        restoreScore: function() as Void
             currentConfig = m.configMngr.getConfig()
             m._score = (currentConfig.SCORE).toint()
             m._bestScore = (currentConfig.BEST_SCORE).toint()
 
-            print m.TOSTRING; "initScore: m._score=";m._score; " m._bestScore=";m._bestScore
+            print m.TOSTRING; "restoreScore: m._score=";m._score; " m._bestScore=";m._bestScore
         end function
 
         ' persist _scrore & _bestScore in registry
         saveScore: function() as Void
-            newConfig = {} 'm.configMngr.getConfig()
+            newConfig = {}
             newConfig.SCORE = StringFromNumber(m._score)
             newConfig.BEST_SCORE = StringFromNumber(m._bestScore)
             m.configMngr.writeConfig(newConfig)
 
             print m.TOSTRING; "saveScore: m._score=";m._score; " m._bestScore=";m._bestScore
+        end function
+
+        ' persist gameMatrix in registry
+        saveGameMatrix:function() as Void
+            newConfig = {}
+            newConfig.GAME_MATRIX = m.gameMatrixToString()
+            m.configMngr.writeConfig(newConfig)
+        end function
+
+        ' restore gameMatrix from the registry if there's any, otherwise returns an empty gameMatrix
+        restoreGameMatrix: function() as Void
+            currentConfig = m.configMngr.getConfig()            
+            m.gameMatrix = m.createEmptyMatrix()
+            if (currentConfig.GAME_MATRIX <> invalid AND currentConfig.GAME_MATRIX <> "")
+                m.updateGameMatrixFromString(currentConfig.GAME_MATRIX)
+            end if
+            ' m.dumpGameMatrix()
         end function
 
         ' moveNumberDone: function() as Void
@@ -502,6 +560,7 @@ function GameManager (properties = {} as Object) as Object
         exitGame: function() as Void
             m.delayedTimer.reset()
             m.saveScore()
+            m.saveGameMatrix()
         end function
 
         ' delay timer to allow move animation to finish
@@ -516,9 +575,8 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         init: function (properties = {} as Object) as Void
-            m.gameMatrix = m.createEmptyMatrix()
             m.createMatrixXY()
-            m.initScore()
+            m.restoreScore()
             m.initTimer()
         end function
     }

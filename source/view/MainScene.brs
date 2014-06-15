@@ -21,10 +21,12 @@ function MainScene (properties = {} as Object) as Object
 
 
             gameMgr = m.gameMgr
+            gameMgr.restoreGameMatrix()
 
             ' create 1st Number 2 in random position
-            freeCell = gameMgr.getRandomFreeCell()
-            gameMgr.createNumber("2", freeCell.row, freeCell.col)
+            ' freeCell = gameMgr.getRandomFreeCell()
+            ' gameMgr.createNumber("2", freeCell.row, freeCell.col)
+
             ' gameMgr.createNumber("2", 0, 2)
             ' gameMgr.createNumber("2", 0, 3)
             ' gameMgr.createNumber("2", 0, 1)
@@ -32,7 +34,7 @@ function MainScene (properties = {} as Object) as Object
 
             ' gameMgr.createNumber("2", 1, 2)
             ' gameMgr.createNumber("2", 1, 3)
-            ' gameMgr.createNumber("2", 1, 1)
+            ' gameMgr.createNumber("2", 1, 1)e
             ' gameMgr.createNumber("2", 1, 0)
 
             ' gameMgr.createNumber("2", 2, 2)
