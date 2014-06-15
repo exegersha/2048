@@ -22,7 +22,9 @@ function MainScene (properties = {} as Object) as Object
 
             gameMgr = m.gameMgr
 
-            gameMgr.startNewGame()
+            ' create 1st Number 2 in random position
+            freeCell = gameMgr.getRandomFreeCell()
+            gameMgr.createNumber("2", freeCell.row, freeCell.col)
             ' gameMgr.createNumber("2", 0, 2)
             ' gameMgr.createNumber("2", 0, 3)
             ' gameMgr.createNumber("2", 0, 1)
