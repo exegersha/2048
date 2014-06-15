@@ -22,28 +22,28 @@ function MainScene (properties = {} as Object) as Object
 
             gameMgr = m.gameMgr
 
-            ' create 1st Number 2 in random position
-            freeCell = gameMgr.getRandomFreeCell()
-            ' gameMgr.createNumber("2", freeCell.row, freeCell.col)
-            gameMgr.createNumber("2", 0, 2)
-            gameMgr.createNumber("2", 0, 3)
-            gameMgr.createNumber("2", 0, 1)
-            gameMgr.createNumber("2", 0, 0)
+            gameMgr.startNewGame()
+            ' gameMgr.createNumber("2", 0, 2)
+            ' gameMgr.createNumber("2", 0, 3)
+            ' gameMgr.createNumber("2", 0, 1)
+            ' gameMgr.createNumber("2", 0, 0)
 
-            gameMgr.createNumber("2", 1, 2)
-            gameMgr.createNumber("2", 1, 3)
-            gameMgr.createNumber("2", 1, 1)
-            gameMgr.createNumber("2", 1, 0)
+            ' gameMgr.createNumber("2", 1, 2)
+            ' gameMgr.createNumber("2", 1, 3)
+            ' gameMgr.createNumber("2", 1, 1)
+            ' gameMgr.createNumber("2", 1, 0)
 
-            gameMgr.createNumber("2", 2, 2)
-            gameMgr.createNumber("2", 2, 3)
-            gameMgr.createNumber("2", 2, 1)
-            gameMgr.createNumber("2", 2, 0)
+            ' gameMgr.createNumber("2", 2, 2)
+            ' gameMgr.createNumber("2", 2, 3)
+            ' gameMgr.createNumber("2", 2, 1)
+            ' gameMgr.createNumber("2", 2, 0)
 
-            gameMgr.createNumber("2", 3, 2)
-            gameMgr.createNumber("2", 3, 3)
-            gameMgr.createNumber("2", 3, 1)
-            gameMgr.createNumber("2", 3, 0)
+            ' gameMgr.createNumber("2", 3, 2)
+            ' gameMgr.createNumber("2", 3, 3)
+            ' gameMgr.createNumber("2", 3, 1)
+            ' gameMgr.createNumber("2", 3, 0)
+
+
 
             ' create 2nd Number 2 in random position
             ' freeCell = gameMgr.getRandomFreeCell()
@@ -80,6 +80,9 @@ function MainScene (properties = {} as Object) as Object
             m.onBackPressed()
         end function
 
+        onInfoPressed: function() as Void
+            m.gameMgr.startNewGame()
+        end function
 
         onLeftPressed: function() as Void
             m.gameMgr.moveLeft()

@@ -126,6 +126,37 @@ function GameManager (properties = {} as Object) as Object
             print m.TOSTRING; " movement done!"
         end function
 
+        ' itearte the gameMatrix to dispose any number it contains
+        disposeCurrentGame: function() as Void
+            gameMatrix = m.gameMatrix
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            for i=0 to matrix_rows
+                for j=0 to matrix_cols
+                    if (gameMatrix[i,j] <> invalid)
+                        gameMatrix[i,j].dispose()
+                        gameMatrix[i,j] = invalid
+                        RunGarbageCollector()
+                    end if
+                end for                
+            end for
+        end function
+
+        startNewGame: function() as Void
+            ' reset score
+            m._score = 0
+            ' persist _bestScore in case it was changed during this game
+            m.saveScore()
+
+            ' dispose any number in UI from previous game and reset the gameMatrix
+            m.disposeCurrentGame()
+            m.dumpGameMatrix()
+
+            ' create 1st Number 2 in random position
+            freeCell = m.getRandomFreeCell()
+            m.createNumber("2", freeCell.row, freeCell.col)
+        end function
+
         moveLeft: function() as Void
             print m.TOSTRING; " move left BEGIN"
             'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
