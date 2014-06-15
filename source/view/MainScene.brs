@@ -22,6 +22,7 @@ function MainScene (properties = {} as Object) as Object
 
             gameMgr = m.gameMgr
             gameMgr.restoreGameMatrix()
+            gameMgr.restoreScore()
 
             ' create 1st Number 2 in random position
             ' freeCell = gameMgr.getRandomFreeCell()

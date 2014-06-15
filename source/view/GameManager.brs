@@ -10,8 +10,10 @@ function GameManager (properties = {} as Object) as Object
         ANIMATION_FRAMES: 6
         WIN_NUMBER: "2048"
 
-        _score: invalid       ' stores the score of the current game
-        _bestScore: invalid  ' init this value from the registry on Init()
+        _score: invalid         ' stores the score of the current game
+        _bestScore: invalid     ' init this value from the registry on Init()
+        scoreTxt: invalid       ' Textfield()
+        bestScoreTxt: invalid   ' Textfield()
         configMngr: ConfigManager()
 
         msgBus: MessageBus()
@@ -187,6 +189,7 @@ function GameManager (properties = {} as Object) as Object
             m._score = 0
             ' persist _bestScore in case it was changed during this game
             m.saveScore()
+            m.updateScore()
 
             ' dispose any number in UI from previous game and reset the gameMatrix
             m.disposeCurrentGame()
@@ -438,7 +441,7 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         ' updates _score & _bestScore variables and UI
-        updateScore: function(addToScore as Integer) as Void
+        updateScore: function(addToScore=0 as Integer) as Void
             _score = m._score
             _bestScore = m._bestScore
 
@@ -447,18 +450,42 @@ function GameManager (properties = {} as Object) as Object
                 _bestScore = _score
             end if
 
+            m.scoreTxt.setText(StringFromNumber(_score))
+            m.bestScoreTxt.setText(StringFromNumber(_bestScore))
+
             m._score = _score
             m._bestScore = _bestScore
-            ' print m.TOSTRING; "restoreScore: m._score=";m._score; " m._bestScore=";m._bestScore
+            ' print m.TOSTRING; "updateScore: m._score=";m._score; " m._bestScore=";m._bestScore
         end function
 
-        ' retrieves _scrore & _bestScore from registry (TODO: & updates UI)
+        ' Retrieves _scrore & _bestScore from registry AND creates UI
         restoreScore: function() as Void
             currentConfig = m.configMngr.getConfig()
-            m._score = (currentConfig.SCORE).toint()
-            m._bestScore = (currentConfig.BEST_SCORE).toint()
+            _score = currentConfig.SCORE
+            _bestScore = currentConfig.BEST_SCORE
+            
+            m._score = (_score).toint()
+            m._bestScore = (_bestScore).toint()
 
-            print m.TOSTRING; "restoreScore: m._score=";m._score; " m._bestScore=";m._bestScore
+
+            ' Creates UI for SCORE and BEST
+            style = StyleUtils().score
+            scoreTxt = TextField()
+            scoreTxt.setText(_score)
+            scoreTxt.setXY(style.X, style.Y)
+            scoreTxt.colour = style.colour
+            scoreTxt.setFont(style.font)
+            m.parentContainer.addChild(scoreTxt)
+            m.scoreTxt = scoreTxt
+
+            style = StyleUtils().bestScore
+            bestScoreTxt = TextField()
+            bestScoreTxt.setText(_bestScore)
+            bestScoreTxt.setXY(style.X, style.Y)
+            bestScoreTxt.colour = style.colour
+            bestScoreTxt.setFont(style.font)
+            m.parentContainer.addChild(bestScoreTxt)
+            m.bestScoreTxt = bestScoreTxt
         end function
 
         ' persist _scrore & _bestScore in registry
@@ -576,7 +603,6 @@ function GameManager (properties = {} as Object) as Object
 
         init: function (properties = {} as Object) as Void
             m.createMatrixXY()
-            m.restoreScore()
             m.initTimer()
         end function
     }
