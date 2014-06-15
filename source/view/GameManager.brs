@@ -145,7 +145,7 @@ function GameManager (properties = {} as Object) as Object
                             else if (gameMatrix[i, j-1].value = gameMatrix[i,j].value AND newJoinNumber[i, j-1]=invalid AND newJoinNumber[i,j]=invalid)
                                 'update score before disposing numbers
                                 m.updateScore((gameMatrix[i,j].value).toint() * 2)
-                                ' if cell on the right has same Number do a JOIN
+                                ' if cell on the left has same Number do a JOIN
                                 m.joinNumber(gameMatrix[i,j], i, j-1)
                                 ' mark target position as a new JOIN to avoid JOINING again during this move
                                 newJoinNumber[i, j-1] = true
@@ -166,9 +166,81 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         moveDown: function() as Void
+            print m.TOSTRING; " move down BEGIN"
+            'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
+            newJoinNumber = m.createEmptyMatrix()
+
+            gameMatrix = m.gameMatrix
+            cols = m.MATRIX_COLS
+            rows = m.MATRIX_ROWS
+            moveDone = false 'flag to indicate if there's at least 1 number changing position in this move
+            for k=1 to cols ' repeat the sweep 3 times
+                for i=rows-1 to 0 step -1
+                    for j=0 to cols
+                        if (gameMatrix[i,j] <> invalid)
+                            if (gameMatrix[i+1, j] = invalid) ' if cell below is empty move Number
+                                m.moveNumber(gameMatrix[i,j], i+1, j)
+                                moveDone = true
+                            else if (gameMatrix[i+1, j].value = gameMatrix[i,j].value AND newJoinNumber[i+1, j]=invalid AND newJoinNumber[i,j]=invalid)
+                                'update score before disposing numbers
+                                m.updateScore((gameMatrix[i,j].value).toint() * 2)
+                                ' if cell below has same Number do a JOIN
+                                m.joinNumber(gameMatrix[i,j], i+1, j)
+                                ' mark target position as a new JOIN to avoid JOINING again during this move
+                                newJoinNumber[i+1, j] = true
+                                moveDone = true
+                            end if
+                        end if
+                    end for
+                end for
+            end for
+            m.gameMatrix = gameMatrix
+            
+            newJoinNumber = invalid
+
+            m.updateGameStatus(moveDone)
+            m.dumpGameMatrix()
+
+            print m.TOSTRING; " move down END"
         end function
 
         moveUp: function() as Void
+            print m.TOSTRING; " move up BEGIN"
+            'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
+            newJoinNumber = m.createEmptyMatrix()
+
+            gameMatrix = m.gameMatrix
+            cols = m.MATRIX_COLS
+            rows = m.MATRIX_ROWS
+            moveDone = false 'flag to indicate if there's at least 1 number changing position in this move
+            for k=1 to cols ' repeat the sweep 3 times
+                for i=1 to rows
+                    for j=0 to cols
+                        if (gameMatrix[i,j] <> invalid)
+                            if (gameMatrix[i-1, j] = invalid) ' if cell above is empty move Number
+                                m.moveNumber(gameMatrix[i,j], i-1, j)
+                                moveDone = true
+                            else if (gameMatrix[i-1, j].value = gameMatrix[i,j].value AND newJoinNumber[i-1, j]=invalid AND newJoinNumber[i,j]=invalid)
+                                'update score before disposing numbers
+                                m.updateScore((gameMatrix[i,j].value).toint() * 2)
+                                ' if cell on above has same Number do a JOIN
+                                m.joinNumber(gameMatrix[i,j], i-1, j)
+                                ' mark target position as a new JOIN to avoid JOINING again during this move
+                                newJoinNumber[i-1, j] = true
+                                moveDone = true
+                            end if
+                        end if
+                    end for
+                end for
+            end for
+            m.gameMatrix = gameMatrix
+            
+            newJoinNumber = invalid
+
+            m.updateGameStatus(moveDone)
+            m.dumpGameMatrix()
+
+            print m.TOSTRING; " move up END"
         end function
 
         ' sweep in this order, 3 times to complete the full barrier movement:
