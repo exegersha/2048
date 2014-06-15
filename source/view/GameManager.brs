@@ -22,6 +22,10 @@ function GameManager (properties = {} as Object) as Object
         'This is replaces at the bottom of this class from param properties
         parentContainer: invalid
 
+        ' delay timer to allow move animation to finish
+        delayedTimer: invalid
+        DELAY_IN_MSEC: 200 'milliseconds
+
 
         ' Store all the positions available for each reactangle (calculated from background image)
         createMatrixXY: function() as Void
@@ -122,10 +126,6 @@ function GameManager (properties = {} as Object) as Object
             return freeCell
         end function
 
-        moveNumberDone: function() as Void
-            print m.TOSTRING; " movement done!"
-        end function
-
         ' itearte the gameMatrix to dispose any number it contains
         disposeCurrentGame: function() as Void
             gameMatrix = m.gameMatrix
@@ -143,6 +143,8 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         startNewGame: function() as Void
+            m.delayedTimer.reset()
+            
             ' reset score
             m._score = 0
             ' persist _bestScore in case it was changed during this game
@@ -326,10 +328,21 @@ function GameManager (properties = {} as Object) as Object
                 ' show GAME OVER screen (show "*" to start new game)
                 print m.TOSTRING; " GAME OVER :( **************************"
             else if (moveDoneBefore)
-                ' Insert a new number in random position
-                freeCell = m.getRandomFreeCell()
-                m.createNumber("2", freeCell.row, freeCell.col)
+                ' create next new number after the delay time to allow move animations to finish
+                delayedTimer = m.delayedTimer
+                delayedTimer.reset()
+                delayedTimer.start()
+                m.delayedTimer = delayedTimer
             end if
+        end function
+
+        onTimerCompleteHandler: function(eventObj as Object)
+            ' print m.TOSTRING; " onTimerCompleteHandler: "
+            m.delayedTimer.stop()
+            
+            ' Insert a new number in random position
+            freeCell = m.getRandomFreeCell()
+            m.createNumber("2", freeCell.row, freeCell.col)
         end function
 
         hasWinnerNumber: function() as Boolean
@@ -417,6 +430,9 @@ function GameManager (properties = {} as Object) as Object
             print m.TOSTRING; "saveScore: m._score=";m._score; " m._bestScore=";m._bestScore
         end function
 
+        ' moveNumberDone: function() as Void
+        '     print m.TOSTRING; " movement done!"
+        ' end function
 
         ' move aNumber to the target row,col in the gameMatrix
         moveNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
@@ -483,16 +499,27 @@ function GameManager (properties = {} as Object) as Object
             ' end for
         end function
 
-        onFocusIn: function (eventObj as Object) as Void
+        exitGame: function() as Void
+            m.delayedTimer.reset()
+            m.saveScore()
         end function
 
-        onFocusOut: function (eventObj as Object) as Void
+        ' delay timer to allow move animation to finish
+        initTimer: function() as Void
+            delayedTimer = Timer("", m.DELAY_IN_MSEC, 1)
+            delayedTimer.addEventListener({
+                context: m,
+                eventType: "onTimerComplete",
+                handler: "onTimerCompleteHandler"
+            })
+            m.delayedTimer = delayedTimer
         end function
 
         init: function (properties = {} as Object) as Void
             m.gameMatrix = m.createEmptyMatrix()
             m.createMatrixXY()
             m.initScore()
+            m.initTimer()
         end function
     }
 

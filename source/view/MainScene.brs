@@ -102,7 +102,7 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onBackPressed: function() as Void
-            m.gameMgr.saveScore()
+            m.gameMgr.exitGame()
             
             ' Close the app!
             m.msgBus.dispatchEvent(Event({
