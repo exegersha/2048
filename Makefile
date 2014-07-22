@@ -42,7 +42,7 @@ ROKU_DEV_PASSWORD = abcd321
 #	set this to 0
 # If you use only one box, you can set this in an environment variable
 #	but this value will override it
-NO_AUTH=1
+NO_AUTH=0
 
 # Specify here if you want to use the source version of the framework
 #	which will be updated at each build, or leave the current
@@ -148,14 +148,14 @@ build: cloneframework
 	@echo ""
 	@echo ""
 	@echo ""
-	@echo "4 - Before I can fill up this archive, I need"
-	@echo "    to have all the source code neatly in one place."
-	@echo "    So I'm copying all of that into the build"
-	@echo "    dir at $(BUILDDIR)";
-	@echo "--------------------------------------------------------"
+#	@echo "4 - Before I can fill up this archive, I need"
+#	@echo "    to have all the source code neatly in one place."
+#	@echo "    So I'm copying all of that into the build"
+#	@echo "    dir at $(BUILDDIR)";
+#	@echo "--------------------------------------------------------"
 	@echo ""
 
-	cp -r ../$(FRAMEWORK_DIR)/source $(BUILDDIR)/
+#	cp -r ../$(FRAMEWORK_DIR)/source $(BUILDDIR)/   -- FRAMEWORK IS ALREADY IN /source/com/...
 	cp -r $(APP_INCLUDES) $(BUILDDIR)/
 	@echo "... done."
 
@@ -208,13 +208,13 @@ cloneframework:
 	@echo ""
 
 ifeq (,$(FRAMEWORK_TARGET_DIR))
-	@echo "You don't have any version of the framework right now. Cloning a fresh version. Additionally, if you specified a tag, we're checking that one out."
+#	@echo "You don't have any version of the framework right now. Cloning a fresh version. Additionally, if you specified a tag, we're checking that one out."
 
-	ssh-agent bash -c 'cd ../; pwd; ssh-add ~/.ssh/id_rsa.pub; git clone $(GIT_FRAMEWORK_REPO); cd $(FRAMEWORK_DIR); git checkout master'
+#	ssh-agent bash -c 'cd ../; pwd; ssh-add ~/.ssh/id_rsa.pub; git clone $(GIT_FRAMEWORK_REPO); cd $(FRAMEWORK_DIR); git checkout master'
 
 ifneq ($(FRAMEWORK_TO_USE),source)
 ifneq ($(FRAMEWORK_TO_USE),dev)
-	ssh-agent bash -c 'cd ../; pwd; ssh-add ~/.ssh/id_rsa.pub; cd $(FRAMEWORK_DIR); git fetch origin; git checkout $(FRAMEWORK_TO_USE)'
+#	ssh-agent bash -c 'cd ../; pwd; ssh-add ~/.ssh/id_rsa.pub; cd $(FRAMEWORK_DIR); git fetch origin; git checkout $(FRAMEWORK_TO_USE)'
 endif
 endif
 
