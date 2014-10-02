@@ -194,3 +194,17 @@ function StringFirstCharToUpperCase(convertStr as String) as String
         return convertStr
     end if
 end function
+
+' prefixes single digit numbers with a zero and outputs as string, if > 10 just returns as string -- '@TODO: review this function
+function PrefixZeroToString(value as Integer, prefixLength = 1 as Integer) as String
+
+    retVal = value.toStr()
+
+    while(value < 10 * prefixLength)
+        retVal = "0" + value.toStr()
+        value = value * 10
+    end while
+    print "***** retVal=";retVal
+    return retVal
+end function
+

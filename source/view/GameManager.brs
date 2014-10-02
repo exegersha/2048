@@ -17,7 +17,7 @@ function GameManager (properties = {} as Object) as Object
         configMngr: ConfigManager()
 
         msgBus: MessageBus()
-        
+
         matrixXY: invalid
         ' Stores the Number objects present in each position of the game matrix
         gameMatrix: invalid
@@ -161,7 +161,7 @@ function GameManager (properties = {} as Object) as Object
                 print m.TOSTRING; " generating random cell: i="; i; " j="; j
             end while
             print m.TOSTRING; " random cell DONE!  i="; i; " j="; j
-            
+
             freeCell = {row: i, col: j}
             return freeCell
         end function
@@ -178,7 +178,7 @@ function GameManager (properties = {} as Object) as Object
                         gameMatrix[i,j] = invalid
                         RunGarbageCollector()
                     end if
-                end for                
+                end for
             end for
         end function
 
@@ -272,7 +272,7 @@ function GameManager (properties = {} as Object) as Object
                 end for
             end for
             m.gameMatrix = gameMatrix
-            
+
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
@@ -311,7 +311,7 @@ function GameManager (properties = {} as Object) as Object
                 end for
             end for
             m.gameMatrix = gameMatrix
-            
+
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
@@ -354,7 +354,7 @@ function GameManager (properties = {} as Object) as Object
                 end for
             end for
             m.gameMatrix = gameMatrix
-            
+
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
@@ -383,7 +383,7 @@ function GameManager (properties = {} as Object) as Object
         onTimerCompleteHandler: function(eventObj as Object)
             ' print m.TOSTRING; " onTimerCompleteHandler: "
             m.delayedTimer.stop()
-            
+
             ' Insert a new number in random position
             freeCell = m.getRandomFreeCell()
             m.createNumber("2", freeCell.row, freeCell.col)
@@ -450,8 +450,9 @@ function GameManager (properties = {} as Object) as Object
                 _bestScore = _score
             end if
 
-            m.scoreTxt.setText(StringFromNumber(_score))
-            m.bestScoreTxt.setText(StringFromNumber(_bestScore))
+            prefixLength = 4
+            m.scoreTxt.setText(PrefixZeroToString(_score, prefixLength))
+            m.bestScoreTxt.setText(PrefixZeroToString(_bestScore, prefixLength))
 
             m._score = _score
             m._bestScore = _bestScore
@@ -463,7 +464,7 @@ function GameManager (properties = {} as Object) as Object
             currentConfig = m.configMngr.getConfig()
             _score = currentConfig.SCORE
             _bestScore = currentConfig.BEST_SCORE
-            
+
             m._score = (_score).toint()
             m._bestScore = (_bestScore).toint()
 
@@ -507,7 +508,7 @@ function GameManager (properties = {} as Object) as Object
 
         ' restore gameMatrix from the registry if there's any, otherwise returns an empty gameMatrix
         restoreGameMatrix: function() as Void
-            currentConfig = m.configMngr.getConfig()            
+            currentConfig = m.configMngr.getConfig()
             m.gameMatrix = m.createEmptyMatrix()
             if (currentConfig.GAME_MATRIX <> invalid AND currentConfig.GAME_MATRIX <> "")
                 m.updateGameMatrixFromString(currentConfig.GAME_MATRIX)
