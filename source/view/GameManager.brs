@@ -196,7 +196,7 @@ function GameManager (properties = {} as Object) as Object
             ' persist empty gameMatrix
             m.saveGameMatrix()
 
-            ' m.dumpGameMatrix()
+            m.dumpGameMatrix()
 
             ' create 1st Number 2 in random position
             freeCell = m.getRandomFreeCell()
@@ -371,6 +371,10 @@ function GameManager (properties = {} as Object) as Object
             else if (m.isGameOver())
                 ' show GAME OVER screen (show "*" to start new game)
                 print m.TOSTRING; " GAME OVER :( **************************"
+                m.dispatchEvent(Event({
+                    eventType: "onGameOver",
+                    target: m
+                }))
             else if (moveDoneBefore)
                 ' create next new number after the delay time to allow move animations to finish
                 delayedTimer = m.delayedTimer

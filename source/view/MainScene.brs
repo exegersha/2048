@@ -108,7 +108,7 @@ function MainScene (properties = {} as Object) as Object
 
         onBackPressed: function() as Void
             m.gameMgr.exitGame()
-            
+
             ' Close the app!
             m.msgBus.dispatchEvent(Event({
                 eventType: "closeApp",
@@ -124,7 +124,21 @@ function MainScene (properties = {} as Object) as Object
         onFocusOut: function (eventObj as Object) as Void
         end function
 
+        onGameOverHandler: function(eventObj as Object) as Void
+            print m.TOSTRING; " onGameOverHandler called! Load bg image: pkg://images/background_game_over.png"
+            m.bgImage.load("pkg://images/background_game_over.png")
+        end function
+
+        registerListeners: function () as Void
+            m.addEventListener({
+                eventType: "onGameOver",
+                handler: "onGameOverHandler",
+                context: m
+            })
+        end function
+
         init: function (properties = {} as Object) as Void
+            m.registerListeners()
             m.createUI()
         end function
     }
