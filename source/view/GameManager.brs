@@ -108,7 +108,7 @@ function GameManager (properties = {} as Object) as Object
                     end if
                 end for
             end for
-            print m.TOSTRING; " gameMatrixToString="; str
+            ' print m.TOSTRING; " gameMatrixToString="; str
             return str
         end function
 
@@ -158,9 +158,9 @@ function GameManager (properties = {} as Object) as Object
             while (gameMatrix[i,j] <> invalid)
                 i = RND(matrix_rows) - 1
                 j = RND(matrix_cols) - 1
-                print m.TOSTRING; " generating random cell: i="; i; " j="; j
+                ' print m.TOSTRING; " generating random cell: i="; i; " j="; j
             end while
-            print m.TOSTRING; " random cell DONE!  i="; i; " j="; j
+            ' print m.TOSTRING; " random cell DONE!  i="; i; " j="; j
 
             freeCell = {row: i, col: j}
             return freeCell
@@ -208,7 +208,7 @@ function GameManager (properties = {} as Object) as Object
         end function
 
         moveLeft: function() as Void
-            print m.TOSTRING; " move left BEGIN"
+            ' print m.TOSTRING; " move left BEGIN"
             'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
             newJoinNumber = m.createEmptyMatrix()
 
@@ -241,13 +241,13 @@ function GameManager (properties = {} as Object) as Object
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
-            m.dumpGameMatrix()
+            ' m.dumpGameMatrix()
 
-            print m.TOSTRING; " move left END"
+            ' print m.TOSTRING; " move left END"
         end function
 
         moveDown: function() as Void
-            print m.TOSTRING; " move down BEGIN"
+            ' print m.TOSTRING; " move down BEGIN"
             'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
             newJoinNumber = m.createEmptyMatrix()
 
@@ -280,13 +280,13 @@ function GameManager (properties = {} as Object) as Object
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
-            m.dumpGameMatrix()
+            ' m.dumpGameMatrix()
 
-            print m.TOSTRING; " move down END"
+            ' print m.TOSTRING; " move down END"
         end function
 
         moveUp: function() as Void
-            print m.TOSTRING; " move up BEGIN"
+            ' print m.TOSTRING; " move up BEGIN"
             'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
             newJoinNumber = m.createEmptyMatrix()
 
@@ -319,9 +319,9 @@ function GameManager (properties = {} as Object) as Object
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
-            m.dumpGameMatrix()
+            ' m.dumpGameMatrix()
 
-            print m.TOSTRING; " move up END"
+            ' print m.TOSTRING; " move up END"
         end function
 
         ' sweep in this order, 3 times to complete the full barrier movement:
@@ -329,7 +329,7 @@ function GameManager (properties = {} as Object) as Object
         ' -> 2nd column top-down (i.e. [0,1] [1,1] [2,1] [3,1])
         ' -> 1st column top-down (i.e. [0,0] [1,0] [2,0] [3,0])
         moveRight: function() as Void
-            print m.TOSTRING; " move right BEGIN"
+            ' print m.TOSTRING; " move right BEGIN"
             'stores temporarly the new numbers created from JOINTS to avoid join them again within the same move process
             newJoinNumber = m.createEmptyMatrix()
 
@@ -362,9 +362,9 @@ function GameManager (properties = {} as Object) as Object
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
-            m.dumpGameMatrix()
+            ' m.dumpGameMatrix()
 
-            print m.TOSTRING; " move right END"
+            ' print m.TOSTRING; " move right END"
         end function
 
         ' check if GAME OVERs or WIN and updates _bestScore in registry and UI accordingly
@@ -524,7 +524,7 @@ function GameManager (properties = {} as Object) as Object
             newConfig.BEST_SCORE = StringFromNumber(m._bestScore)
             m.configMngr.writeConfig(newConfig)
 
-            print m.TOSTRING; "saveScore: m._score=";m._score; " m._bestScore=";m._bestScore
+            ' print m.TOSTRING; "saveScore: m._score=";m._score; " m._bestScore=";m._bestScore
         end function
 
         ' persist gameMatrix in registry
