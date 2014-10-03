@@ -201,7 +201,7 @@ function GameManager (properties = {} as Object) as Object
             m._insertNewNumber()
         end function
 
-        ' create a Number 2 in random position
+        ' Create a Number 2 in random position.
         _insertNewNumber: function () as Void
             freeCell = m.getRandomFreeCell()
             m.createNumber("2", freeCell.row, freeCell.col)
@@ -371,10 +371,15 @@ function GameManager (properties = {} as Object) as Object
         updateGameStatus: function(moveDoneBefore as Boolean) as Void
             if (m.hasWinnerNumber())
                 ' show YOU WIN screen! (show "*" to start new game)
-                print m.TOSTRING; " YOU WIN !!! ***************************"
+                ' print m.TOSTRING; " YOU WIN !!! ***************************"
+                m.msgBus.dispatchEvent(Event({
+                    eventType: "onWin",
+                    target: m
+                }))
             else if (m.isGameOver())
                 ' show GAME OVER screen (show "*" to start new game)
-                print m.TOSTRING; " GAME OVER :( **************************"
+                ' print m.TOSTRING; " GAME OVER :( **************************"
+                m._setMatrixInactive()
                 m.msgBus.dispatchEvent(Event({
                     eventType: "onGameOver",
                     target: m
@@ -386,6 +391,21 @@ function GameManager (properties = {} as Object) as Object
                 delayedTimer.start()
                 m.delayedTimer = delayedTimer
             end if
+        end function
+
+        ' Set inactivate all the numbers in the matrix to make it look deactivated (i.e. black & white).
+        _setMatrixInactive: function () as Void
+            gameMatrix = m.gameMatrix
+            matrix_rows = m.MATRIX_ROWS
+            matrix_cols = m.MATRIX_COLS
+            for i=0 to matrix_rows
+                for j=0 to matrix_cols
+                    aNumber = gameMatrix[i,j]
+                    if (aNumber <> invalid)
+                        aNumber.setInactive()
+                    end if
+                end for
+            end for
         end function
 
         onTimerCompleteHandler: function(eventObj as Object)

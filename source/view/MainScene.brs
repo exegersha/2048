@@ -126,14 +126,22 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onGameOverHandler: function(eventObj as Object) as Void
-            print m.TOSTRING; " onGameOverHandler called! Load bg image: pkg://images/background_game_over.png"
             m.bgImage.load("pkg://images/background_game_over.png")
+        end function
+
+        onWinHandler: function(eventObj as Object) as Void
+            m.bgImage.load("pkg://images/background_win.png")
         end function
 
         registerListeners: function () as Void
             m.msgBus.addEventListener({
                 eventType: "onGameOver",
                 handler: "onGameOverHandler",
+                context: m
+            })
+            m.msgBus.addEventListener({
+                eventType: "onWin",
+                handler: "onWinHandler",
                 context: m
             })
         end function

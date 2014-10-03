@@ -108,6 +108,10 @@ function Number (properties = {} as Object) as Object
             m = invalid
             RunGarbageCollector()
         end function
+
+        setInactive: function () as Void
+            m.aNumber.setInactive()
+        end function
     }
 
     for each property in properties
