@@ -86,6 +86,7 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onInfoPressed: function() as Void
+            m.bgImage.load("pkg://images/background.png")
             m.gameMgr.startNewGame()
         end function
 
@@ -130,7 +131,7 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         registerListeners: function () as Void
-            m.addEventListener({
+            m.msgBus.addEventListener({
                 eventType: "onGameOver",
                 handler: "onGameOverHandler",
                 context: m

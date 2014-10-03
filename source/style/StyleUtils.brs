@@ -17,14 +17,14 @@ function StyleUtils()
             }
 
             score: {
-                X: 714 'calulated from background.png
+                X: 699 'calulated from background.png
                 Y: 70  'calulated from background.png
                 colour: &hebe1d8FF
                 font : aafonts.BROWN_PRO_21_BOLD
             }
 
             bestScore: {
-                X: 808  'calulated from background.png
+                X: 793  'calulated from background.png
                 Y: 70   'calulated from background.png
                 colour: &hebe1d8FF
                 font : aafonts.BROWN_PRO_21_BOLD

@@ -199,12 +199,17 @@ end function
 function PrefixZeroToString(value as Integer, prefixLength = 1 as Integer) as String
 
     retVal = value.toStr()
-    threshHold = 10 * prefixLength
-    while(value < threshHold)
-        retVal = "0" + value.toStr()
-        value = value * 10
-    end while
-    print "***** retVal=";retVal
+    if (value = 0)
+        for i=1 to prefixLength
+            retVal = "0" + retVal
+        end for
+    else
+        threshHold = 10 ^ prefixLength
+        while(value < threshHold)
+            retVal = "0" + retVal
+            value = value * 10
+        end while
+    end if
     return retVal
 end function
 

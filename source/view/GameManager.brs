@@ -196,9 +196,13 @@ function GameManager (properties = {} as Object) as Object
             ' persist empty gameMatrix
             m.saveGameMatrix()
 
-            m.dumpGameMatrix()
+            ' m.dumpGameMatrix()
 
-            ' create 1st Number 2 in random position
+            m._insertNewNumber()
+        end function
+
+        ' create a Number 2 in random position
+        _insertNewNumber: function () as Void
             freeCell = m.getRandomFreeCell()
             m.createNumber("2", freeCell.row, freeCell.col)
         end function
@@ -363,7 +367,7 @@ function GameManager (properties = {} as Object) as Object
             print m.TOSTRING; " move right END"
         end function
 
-        ' check if GAME OVERs or WIN and updates _bestSscore in registry and UI accordingly
+        ' check if GAME OVERs or WIN and updates _bestScore in registry and UI accordingly
         updateGameStatus: function(moveDoneBefore as Boolean) as Void
             if (m.hasWinnerNumber())
                 ' show YOU WIN screen! (show "*" to start new game)
@@ -371,7 +375,7 @@ function GameManager (properties = {} as Object) as Object
             else if (m.isGameOver())
                 ' show GAME OVER screen (show "*" to start new game)
                 print m.TOSTRING; " GAME OVER :( **************************"
-                m.dispatchEvent(Event({
+                m.msgBus.dispatchEvent(Event({
                     eventType: "onGameOver",
                     target: m
                 }))
@@ -389,8 +393,7 @@ function GameManager (properties = {} as Object) as Object
             m.delayedTimer.stop()
 
             ' Insert a new number in random position
-            freeCell = m.getRandomFreeCell()
-            m.createNumber("2", freeCell.row, freeCell.col)
+            m._insertNewNumber()
         end function
 
         hasWinnerNumber: function() as Boolean
@@ -454,7 +457,7 @@ function GameManager (properties = {} as Object) as Object
                 _bestScore = _score
             end if
 
-            prefixLength = 4
+            prefixLength = 5
             m.scoreTxt.setText(PrefixZeroToString(_score, prefixLength))
             m.bestScoreTxt.setText(PrefixZeroToString(_bestScore, prefixLength))
 
@@ -466,17 +469,18 @@ function GameManager (properties = {} as Object) as Object
         ' Retrieves _scrore & _bestScore from registry AND creates UI
         restoreScore: function() as Void
             currentConfig = m.configMngr.getConfig()
-            _score = currentConfig.SCORE
-            _bestScore = currentConfig.BEST_SCORE
+            _score = (currentConfig.SCORE).toint()
+            _bestScore = (currentConfig.BEST_SCORE).toint()
 
-            m._score = (_score).toint()
-            m._bestScore = (_bestScore).toint()
+            m._score = _score
+            m._bestScore = _bestScore
 
+            prefixLength = 5
 
             ' Creates UI for SCORE and BEST
             style = StyleUtils().score
             scoreTxt = TextField()
-            scoreTxt.setText(_score)
+            scoreTxt.setText(PrefixZeroToString(_score, prefixLength))
             scoreTxt.setXY(style.X, style.Y)
             scoreTxt.colour = style.colour
             scoreTxt.setFont(style.font)
@@ -485,7 +489,7 @@ function GameManager (properties = {} as Object) as Object
 
             style = StyleUtils().bestScore
             bestScoreTxt = TextField()
-            bestScoreTxt.setText(_bestScore)
+            bestScoreTxt.setText(PrefixZeroToString(_bestScore, prefixLength))
             bestScoreTxt.setXY(style.X, style.Y)
             bestScoreTxt.colour = style.colour
             bestScoreTxt.setFont(style.font)
@@ -514,10 +518,17 @@ function GameManager (properties = {} as Object) as Object
         restoreGameMatrix: function() as Void
             currentConfig = m.configMngr.getConfig()
             m.gameMatrix = m.createEmptyMatrix()
-            if (currentConfig.GAME_MATRIX <> invalid AND currentConfig.GAME_MATRIX <> "")
+            if (currentConfig.GAME_MATRIX <> invalid AND currentConfig.GAME_MATRIX <> "" AND NOT m._isEmptyMatrix(currentConfig.GAME_MATRIX))
                 m.updateGameMatrixFromString(currentConfig.GAME_MATRIX)
+            else
+                ' Insert a new number in random position
+                m._insertNewNumber()
             end if
             ' m.dumpGameMatrix()
+        end function
+
+        _isEmptyMatrix: function (game_matrix as String) as Boolean
+            return game_matrix = "null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"
         end function
 
         ' moveNumberDone: function() as Void
