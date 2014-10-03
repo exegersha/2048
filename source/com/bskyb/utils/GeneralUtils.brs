@@ -1,9 +1,5 @@
 '' GeneralUtils.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 function BoolToStr(bool as Boolean) as String
     if(bool = true)

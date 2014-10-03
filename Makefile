@@ -26,7 +26,7 @@
 VERSION = 0
 # Name your app! This will be used for the name of the zip file created
 # 	and for packaging the app before publishing to the channel store.
-APPNAME = "NowTv"
+APPNAME = "2048"
 
 # The username/password you set on your Roku when enabling developer mode
 # You are advised to use rokudev / abcd321 to help working together!
@@ -69,7 +69,6 @@ FRAMEWORK_TO_USE = dev
 # ---------------- STOP EDITING HERE. DON'T CHANGE ANYTHING BELOW!! --------------
 # --------------------------------------------------------------------------------
 
-GIT_FRAMEWORK_REPO = git@gitlab.nowtv.bskyb.com:roku-framework.git
 # DON'T CHANGE THAT NAME!! IT MUST BE THE SAME AS THE REPO NAME ABOVE
 FRAMEWORK_DIR = roku-framework
 FRAMEWORK_TARGET_DIR := $(shell ls -d ../$(FRAMEWORK_DIR) | tail -n 1)
@@ -203,7 +202,7 @@ cloneframework:
 	fi
 
 	@echo "1 - First, I'm getting the required version"
-	@echo "    of the NowTV Roku Framework"
+	@echo "    of the 2048 Roku Framework"
 	@echo "--------------------------------------------------------"
 	@echo ""
 

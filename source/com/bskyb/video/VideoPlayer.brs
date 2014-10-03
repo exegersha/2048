@@ -1,9 +1,5 @@
 '' VideoPlayer.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 function VideoPlayer(id="" as String) as Object
 
@@ -66,14 +62,13 @@ function VideoPlayer(id="" as String) as Object
             videoclip = CreateObject("roAssociativeArray")
             videoclip.StreamBitrates = bitrates
             videoclip.StreamUrls = stream
-            'videoclip.StreamUrls = "http://xb-nowtv.vod.sky.com/skyplayer/SMPCMOVIES/43cc146509b57310VgnVCM1000000b43150a____/M_KungFuPanda2_2011_03160860_720p-ARCHIVE_720ss.ism/Manifest"
             videoclip.StreamQualities = qualities
             videoclip.StreamFormat = streamformat
             ' License acquisition server details
             videoclip.encodingType =  "PlayReadyLicenseAcquisitionUrl"
             videoclip.encodingKey = drm
             if(maxBandwidth <> -1) videoclip.MaxBandwidth = maxBandwidth
-            'videoclip.encodingKey = "https://services.nowtv.com/video/licence?sessionId=CB478240EF21EF9A07E158442AC4138E.PD041SP1A1&licenceAcquisitionUrl=aHR0cDovL3NteGIuc2t5LmNvbS92b2Qvdmlld2xlc3Mvc2ltcGxlUHJvZ3Jlc3NpdmVMaWNlbmNlLmRvP3R5cGU9cGxheXJlYWR5JmFzc2V0SWQ9NDNjYzE0NjUwOWI1NzMxMFZnblZDTTEwMDAwMDBiNDMxNTBhX19fXyZ2aWRlb0lkPWM3NTQyYjU1MzhiYzMzMTBWZ25WQ00xMDAwMDAwYjQzMTUwYV9fX18"
+            'videoclip.encodingKey = "https://services.com/video/licence?sessionId=CB478240EF21EF9A07E158442AC4138E.PD041SP1A1&licenceAcquisitionUrl=aHR0cDovL3NteGIuc2t5LmNvbS92b2Qvdmlld2xlc3Mvc2ltcGxlUHJvZ3Jlc3NpdmVMaWNlbmNlLmRvP3R5cGU9cGxheXJlYWR5JmFzc2V0SWQ9NDNjYzE0NjUwOWI1NzMxMFZnblZDTTEwMDAwMDBiNDMxNTBhX19fXyZ2aWRlb0lkPWM3NTQyYjU1MzhiYzMzMTBWZ25WQ00xMDAwMDAwYjQzMTUwYV9fX18"
 
             m.player.clearContent()
             m.player.addContent(videoclip)

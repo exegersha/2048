@@ -1,9 +1,5 @@
 '' Timer.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 function Timer(id="" as String, delay=1000 as Integer, repeatCount=0 as Integer) as Object
 

@@ -11,7 +11,6 @@ function Net () as Object
         this.addDefaultRequestHeaders = function (request as Object) as void
             request.addRequestHeader("Accept", "application/json")
             ' request.addRequestHeader("Content-Type", "application/json")
-            ' request.addRequestHeader("X-NowTV-ClientID", m.TODO)
         end function
 
         this.overrideRequestHeaders = function (request as Object, headers) as void

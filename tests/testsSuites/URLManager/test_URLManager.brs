@@ -45,9 +45,9 @@ function testDefaults (t as Object)
     urlMgr = URLManager(settings)
 
     t.assertNotInvalid(urlMgr)
-    t.assertEqual("https://services.nowtv.com/", urlMgr.getServiceAPIUrl())
-    t.assertEqual("http://client.nowtv.com/", urlMgr.getClientAPIUrl())
-    t.assertEqual("http://roku.static.nowtv.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
+    t.assertEqual("https://services.com/", urlMgr.getServiceAPIUrl())
+    t.assertEqual("http://client.com/", urlMgr.getClientAPIUrl())
+    t.assertEqual("http://roku.static.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
 
     urlManagerTestsTearDown()
 end function
@@ -67,9 +67,9 @@ function testPRODEnvironment (t as Object)
     urlMgr = URLManager(settings)
 
     t.assertNotInvalid(urlMgr)
-    t.assertEqual("https://services.nowtv.com/", urlMgr.getServiceAPIUrl())
-    t.assertEqual("http://client.nowtv.com/", urlMgr.getClientAPIUrl())
-    t.assertEqual("http://roku.static.nowtv.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
+    t.assertEqual("https://services.com/", urlMgr.getServiceAPIUrl())
+    t.assertEqual("http://client.com/", urlMgr.getClientAPIUrl())
+    t.assertEqual("http://roku.static.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
 
     urlManagerTestsTearDown()
 end function
@@ -89,9 +89,9 @@ function testINTEGRATIONEnvironment (t as Object)
     urlMgr = URLManager(settings)
 
     t.assertNotInvalid(urlMgr)
-    t.assertEqual("http://services.integration.nowtv.bskyb.com/", urlMgr.getServiceAPIUrl())
-    t.assertEqual("http://client.integration.nowtv.bskyb.com/", urlMgr.getClientAPIUrl())
-    t.assertEqual("http://roku.static.nowtv.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
+    t.assertEqual("http://services.integration.com/", urlMgr.getServiceAPIUrl())
+    t.assertEqual("http://client.integration.com/", urlMgr.getClientAPIUrl())
+    t.assertEqual("http://roku.static.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
 
     urlManagerTestsTearDown()
 end function
@@ -112,9 +112,9 @@ function testPRODStaticEnvironment (t as Object)
     urlMgr = URLManager(settings)
 
     t.assertNotInvalid(urlMgr)
-    t.assertEqual("https://services.nowtv.com/", urlMgr.getServiceAPIUrl())
-    t.assertEqual("http://client.nowtv.com/", urlMgr.getClientAPIUrl())
-    t.assertEqual("http://roku.static.nowtv.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
+    t.assertEqual("https://services.com/", urlMgr.getServiceAPIUrl())
+    t.assertEqual("http://client.com/", urlMgr.getClientAPIUrl())
+    t.assertEqual("http://roku.static.com/prod/app/0.0/", urlMgr.getStaticDataUrl())
 
     urlManagerTestsTearDown()
 end function
@@ -135,9 +135,9 @@ function testSTAGEStaticEnvironment (t as Object)
     urlMgr = URLManager(settings)
 
     t.assertNotInvalid(urlMgr)
-    t.assertEqual("https://services.nowtv.com/", urlMgr.getServiceAPIUrl())
-    t.assertEqual("http://client.nowtv.com/", urlMgr.getClientAPIUrl())
-    t.assertEqual("http://roku.static.nowtv.com/stage/app/0.0/", urlMgr.getStaticDataUrl())
+    t.assertEqual("https://services.com/", urlMgr.getServiceAPIUrl())
+    t.assertEqual("http://client.com/", urlMgr.getClientAPIUrl())
+    t.assertEqual("http://roku.static.com/stage/app/0.0/", urlMgr.getStaticDataUrl())
 
     urlManagerTestsTearDown()
 end function

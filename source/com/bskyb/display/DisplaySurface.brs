@@ -1,9 +1,5 @@
 '' DisplaySurface.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION 
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 function DisplaySurface(id="" as String) as Object
     

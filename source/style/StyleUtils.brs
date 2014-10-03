@@ -2,7 +2,7 @@ function StyleUtils()
 
     if (m.styleUtils = invalid)
 
-        theme = NowTVTheme()
+        theme = AppTheme()
         aaFonts = AppFonts()
 
         m.styleUtils = {

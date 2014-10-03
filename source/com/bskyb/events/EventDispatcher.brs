@@ -1,9 +1,5 @@
 '' EventDispatcher.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 function EventDispatcher (id = "" as String) as Object
     this = {
         id: id,

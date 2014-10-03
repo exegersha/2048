@@ -1,9 +1,5 @@
 '' TextFieldMulti.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION 
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 ' Displays multiple text fields in a line, adjusting their X positions to look like a single sentence 
 ' on the display. Set the default field information on construction and then change individual fields 

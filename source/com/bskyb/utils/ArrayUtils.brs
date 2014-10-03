@@ -1,9 +1,5 @@
 '' ArrayUtils.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 ' Converts the elements in an array to strings, inserts the specified separator between the elements, concatenates them, and returns the resulting string.
 function ArrayJoin(arr as Object, sep=", " as String) as String

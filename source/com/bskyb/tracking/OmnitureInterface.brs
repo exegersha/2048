@@ -1,9 +1,5 @@
 '' OmnitureInterface.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION 
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 function OmnitureInterface(baseUrl as String) as Object
     

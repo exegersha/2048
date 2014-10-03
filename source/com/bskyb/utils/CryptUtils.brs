@@ -1,9 +1,5 @@
 '' CryptUtils.brs
-'' Copyright (c) 2013 BSkyB All Right Reserved
-''
-'' HIGHLY CONFIDENTIAL INFORMATION OF BSKYB.
-'' COPYRIGHT BSKYB. ALL COPYING, DISSEMINATION 
-'' OR DISTRIBUTION STRICTLY PROHIBITED.
+
 
 ' Returns a SHA256 hashed string
 function GetHashedSHA256(text as String) as String

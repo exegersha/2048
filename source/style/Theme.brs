@@ -1,4 +1,4 @@
-function NowTVTheme()
+function AppTheme()
     return {
 
         ' The white, blacks and greys follow a naming convention that's
