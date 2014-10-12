@@ -23,7 +23,7 @@ function Stage () as Object
         this.bkpMsgPort = this.msgPort
         this.screen = CreateObject("roScreen", true, 1280, 720)
         this.screen.setAlphaEnable(true)
-        this.screen.SetMessagePort(this.msgPort)
+        this.screen.SetPort(this.msgPort)
         this.screenColour = &hEDEDEDFF ' Safe white
 
         this.mainContainer = DisplayObjectContainer("mainContainer")

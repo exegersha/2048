@@ -113,7 +113,7 @@ function BigFatPipe() as Object
             for i=1 to m.maxConnections
 
                 urlTransfer = CreateObject("roUrlTransfer")
-                urlTransfer.setMessagePort(msgPort)
+                urlTransfer.setPort(msgPort)
                 urlTransfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
                 urlTransfer.InitClientCertificates()
                 urlTransfer.retainBodyOnError(true)
