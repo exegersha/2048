@@ -7,7 +7,7 @@ function GameManager (properties = {} as Object) as Object
         ' These two constants define the game matrix size for all the game (every other object should refer to these constants)
         MATRIX_ROWS: 3
         MATRIX_COLS: 3
-        ANIMATION_FRAMES: 6
+        ANIMATION_FRAMES: 9
         WIN_NUMBER: "2048"
 
         _score: invalid         ' stores the score of the current game
