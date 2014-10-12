@@ -95,7 +95,6 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onRightPressed: function() as Void
-           ' m.gameMgr.moveNumberRightOneCell(m.number2)
            m.gameMgr.moveRight()
         end function
 

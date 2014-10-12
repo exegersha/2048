@@ -591,35 +591,6 @@ function GameManager (properties = {} as Object) as Object
             aNumber = m.createNumber(jointValue, targetRow, targetCol)
         end function
 
-        moveNumberRightOneCell: function(aNumber as Object) as Void
-            matrixXY = m.matrixXY
-
-            if (aNumber.i < 3)
-                if (aNumber.j < 3)
-                    aNumber.j = aNumber.j + 1
-                else
-                    aNumber.j = 0
-                    aNumber.i = aNumber.i + 1
-                end if
-            else
-                if (aNumber.j < 3)
-                    aNumber.j = aNumber.j + 1
-                end if
-            end if
-
-            i = aNumber.i
-            j = aNumber.j
-            TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"moveNumberDone"}})
-
-            m.aNumber = aNumber
-
-            ' for i=0 to 3
-            '     for j=0 to 3
-            '         TweenManager().to(aNumber, 6, { x:matrixXY[i,j].X, y: matrixXY[i,j].Y, onComplete: {destination:m, callback:"moveNumberDone"}})
-            '     end for
-            ' end for
-        end function
-
         exitGame: function() as Void
             m.delayedTimer.reset()
             m.saveScore()
