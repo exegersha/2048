@@ -91,19 +91,39 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onLeftPressed: function() as Void
-            m.gameMgr.moveLeft()
+            if (m.gameMgr.allowNewMove)
+                ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
+                m.gameMgr.allowNewMove = False
+
+                m.gameMgr.moveLeft()
+            end if
         end function
 
         onRightPressed: function() as Void
-           m.gameMgr.moveRight()
+            if (m.gameMgr.allowNewMove)
+                ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
+                m.gameMgr.allowNewMove = False
+
+                m.gameMgr.moveRight()
+            end if
         end function
 
         onUpPressed: function() as Void
-            m.gameMgr.moveUp()
+            if (m.gameMgr.allowNewMove)
+                ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
+                m.gameMgr.allowNewMove = False
+
+                m.gameMgr.moveUp()
+            end if
         end function
 
         onDownPressed: function() as Void
-            m.gameMgr.moveDown()
+            if (m.gameMgr.allowNewMove)
+                ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
+                m.gameMgr.allowNewMove = False
+
+                m.gameMgr.moveDown()
+            end if
         end function
 
         onBackPressed: function() as Void

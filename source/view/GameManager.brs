@@ -28,6 +28,9 @@ function GameManager (properties = {} as Object) as Object
         delayedTimer: invalid
         DELAY_IN_MSEC: 200 'milliseconds
 
+        ' Flag used to allow/deny new moves dispatched form the keypress events.
+        allowNewMove: True
+
 
         ' Store all the positions available for each reactangle (calculated from background image)
         createMatrixXY: function() as Void
@@ -199,6 +202,9 @@ function GameManager (properties = {} as Object) as Object
             ' m.dumpGameMatrix()
 
             m._insertNewNumber()
+
+            ' Reset flag to listen to new arrow key presses
+            m.allowNewMove = True
         end function
 
         ' Create a Number 2 in random position.
@@ -390,6 +396,9 @@ function GameManager (properties = {} as Object) as Object
                 delayedTimer.reset()
                 delayedTimer.start()
                 m.delayedTimer = delayedTimer
+            else
+                ' Reset flag to listen to new arrow key presses
+                m.allowNewMove = True
             end if
         end function
 
@@ -414,6 +423,9 @@ function GameManager (properties = {} as Object) as Object
 
             ' Insert a new number in random position
             m._insertNewNumber()
+
+            ' Reset flag to listen to new arrow key presses
+            m.allowNewMove = True
         end function
 
         hasWinnerNumber: function() as Boolean
