@@ -4,7 +4,6 @@ function Number (properties = {} as Object) as Object
     classDefinition = {
 
         TOSTRING: "<Number>"
-        msgBus: MessageBus()
         value: invalid
         ' store position in matrixXY: i=row, j=column
         i: invalid
