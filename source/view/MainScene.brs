@@ -91,38 +91,42 @@ function MainScene (properties = {} as Object) as Object
         end function
 
         onLeftPressed: function() as Void
-            if (m.gameMgr.allowNewMove)
+            gameMgr = m.gameMgr
+            if (gameMgr.allowNewMove)
                 ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
-                m.gameMgr.allowNewMove = False
+                gameMgr.allowNewMove = False
 
-                m.gameMgr.moveLeft()
+                gameMgr.moveLeft()
             end if
         end function
 
         onRightPressed: function() as Void
-            if (m.gameMgr.allowNewMove)
+            gameMgr = m.gameMgr
+            if (gameMgr.allowNewMove)
                 ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
-                m.gameMgr.allowNewMove = False
+                gameMgr.allowNewMove = False
 
-                m.gameMgr.moveRight()
+                gameMgr.moveRight()
             end if
         end function
 
         onUpPressed: function() as Void
-            if (m.gameMgr.allowNewMove)
+            gameMgr = m.gameMgr
+            if (gameMgr.allowNewMove)
                 ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
-                m.gameMgr.allowNewMove = False
+                gameMgr.allowNewMove = False
 
-                m.gameMgr.moveUp()
+                gameMgr.moveUp()
             end if
         end function
 
         onDownPressed: function() as Void
-            if (m.gameMgr.allowNewMove)
+            gameMgr = m.gameMgr
+            if (gameMgr.allowNewMove)
                 ' Deny new moves until this flag is reset when adding a new tile to the game OR move update is done.
-                m.gameMgr.allowNewMove = False
+                gameMgr.allowNewMove = False
 
-                m.gameMgr.moveDown()
+                gameMgr.moveDown()
             end if
         end function
 
