@@ -7,7 +7,7 @@ function GameManager (properties = {} as Object) as Object
         ' These two constants define the game matrix size for all the game (every other object should refer to these constants)
         MATRIX_ROWS: 3
         MATRIX_COLS: 3
-        ANIMATION_FRAMES: 9
+        ANIMATION_FRAMES: 7
         WIN_NUMBER: "2048"
 
         _score: invalid         ' stores the score of the current game
@@ -27,6 +27,12 @@ function GameManager (properties = {} as Object) as Object
         ' delay timer to allow move animation to finish
         delayedTimer: invalid
         DELAY_IN_MSEC: 200 'milliseconds
+
+        ' delay timer to dispose joint numbers (this is to allow the animation to complete before joining numbers)
+        disposeNumbersTimer: invalid
+        DISPOSE_DELAY_IN_MSEC: 150 'milliseconds
+        ' array keeping reference to the numbers that have being joint and need a dispose when the animation is done.
+        numbersToDispose: []
 
         ' Flag used to allow/deny new moves dispatched form the keypress events.
         allowNewMove: True
@@ -244,6 +250,8 @@ function GameManager (properties = {} as Object) as Object
             end for
             m.gameMatrix = gameMatrix
 
+            ' m.disposeNumbersTimer.start()
+
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
@@ -283,6 +291,8 @@ function GameManager (properties = {} as Object) as Object
             end for
             m.gameMatrix = gameMatrix
 
+            ' m.disposeNumbersTimer.start()
+
             newJoinNumber = invalid
 
             m.updateGameStatus(moveDone)
@@ -321,6 +331,8 @@ function GameManager (properties = {} as Object) as Object
                 end for
             end for
             m.gameMatrix = gameMatrix
+
+            ' m.disposeNumbersTimer.start()
 
             newJoinNumber = invalid
 
@@ -364,6 +376,8 @@ function GameManager (properties = {} as Object) as Object
                 end for
             end for
             m.gameMatrix = gameMatrix
+
+            ' m.disposeNumbersTimer.start()
 
             newJoinNumber = invalid
 
@@ -568,9 +582,13 @@ function GameManager (properties = {} as Object) as Object
         ' end function
 
         ' move aNumber to the target row,col in the gameMatrix
-        moveNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
+        moveNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer, useCallBack=false as Boolean) as Void
             matrixXY = m.matrixXY
-            TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y }) ', onComplete: {destination:m, callback:"moveNumberDone"}})
+            if (useCallBack)
+                TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y, onComplete: {destination:m, callback:"disposeJointNumbers"}})
+            else
+                TweenManager().to(aNumber, m.ANIMATION_FRAMES, { x:matrixXY[targetRow,targetCol].X, y: matrixXY[targetRow,targetCol].Y }) ', onComplete: {destination:m, callback:"moveNumberDone"}})
+            end if
 
             ' Update gameMatrix and Number object:
             gameMatrix = m.gameMatrix
@@ -583,24 +601,60 @@ function GameManager (properties = {} as Object) as Object
             m.gameMatrix = gameMatrix
         end function
 
+        ' onMoveDoneHandler: function (eventObj as Object) as Void
+        disposeJointNumbers: function () as Void
+            ' print m.TOSTRING; " onMoveDoneHandler called!"
+
+            ' m.disposeNumbersTimer.stop()
+
+            ' aNumber = m._aNumber
+            ' targetRow = m._targetRow
+            ' targetCol = m._targetCol
+
+            numbersToDispose = m.numbersToDispose
+            for i=0 to numbersToDispose.count()-1
+
+                aNumber = numbersToDispose[i].aNumber
+                oldTargetNumber = numbersToDispose[i].oldTargetNumber
+                targetRow = numbersToDispose[i].targetRow
+                targetCol = numbersToDispose[i].targetCol
+                ' print m.TOSTRING; targetRow
+                ' print m.TOSTRING; targetCol
+                ' print m.TOSTRING; aNumber
+                
+                jointValue = StringFromInt((aNumber.value).toint() * 2)
+                ' print "*** jointValue="; jointValue
+                m.createNumber(jointValue, targetRow, targetCol)
+
+                oldTargetNumber.dispose()
+                oldTargetNumber = invalid
+                aNumber.dispose()
+                aNumber = invalid
+
+                ' print "*** after dispose"
+            end for
+            m.numbersToDispose.clear()
+
+            ' RunGarbageCollector()
+        end function
+
         ' move aNumber to the target row,col in the gameMatrix and joins it with the current number in the target position
         joinNumber: function(aNumber as Object, targetRow as Integer, targetCol as Integer) as Void
+            ' disposeNumbersTimer = m.disposeNumbersTimer
+            ' disposeNumbersTimer.stop()
+
             oldTargetNumber = m.gameMatrix[targetRow, targetCol]
-            jointValue = StringFromInt((aNumber.value).toint() * 2)
-            ' print "*** jointValue="; jointValue
-
-            m.moveNumber(aNumber, targetRow, targetCol)
-
-            ' print "*** after animation"
-
-            oldTargetNumber.dispose()
-            oldTargetNumber = invalid
-            aNumber.dispose()
-            aNumber = invalid
-            RunGarbageCollector()
-
-            ' print "*** after dispose"
-            aNumber = m.createNumber(jointValue, targetRow, targetCol)
+            numberToDispose = {
+                aNumber: aNumber
+                oldTargetNumber: oldTargetNumber
+                targetRow: targetRow
+                targetCol: targetCol
+            }
+            m.numbersToDispose.push(numberToDispose)
+            
+            m.moveNumber(aNumber, targetRow, targetCol, true)
+            
+            ' disposeNumbersTimer.start()
         end function
 
         exitGame: function() as Void
@@ -618,6 +672,14 @@ function GameManager (properties = {} as Object) as Object
                 handler: "onTimerCompleteHandler"
             })
             m.delayedTimer = delayedTimer
+
+            disposeNumbersTimer = Timer("", m.DISPOSE_DELAY_IN_MSEC, 1)
+            disposeNumbersTimer.addEventListener({
+                context: m,
+                eventType: "onTimerComplete",
+                handler: "onMoveDoneHandler"
+            })
+            m.disposeNumbersTimer = disposeNumbersTimer
         end function
 
         init: function (properties = {} as Object) as Void
